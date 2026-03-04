@@ -36,4 +36,3 @@ MIT
 // ping
 // ping
 // ping 2
-// ping 3
