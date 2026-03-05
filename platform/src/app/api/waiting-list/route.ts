@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { sendEmail } from '@/lib/email';
 
-const bucket = process.env.SUBMISSIONS_BUCKET || 'aiready-submissions';
+const bucket = process.env.SUBMISSIONS_BUCKET;
 const s3 = new S3Client({});
 const sesToEmail = process.env.SES_TO_EMAIL || 'team@getaiready.dev';
-const ses = new SESClient({});
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,6 +15,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: 'Email and plan are required' },
         { status: 400 }
+      );
+    }
+
+    if (!bucket) {
+      console.error('SUBMISSIONS_BUCKET environment variable is not set');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
       );
     }
 
@@ -53,18 +60,11 @@ export async function POST(req: NextRequest) {
       </div>
     `;
 
-    await ses.send(
-      new SendEmailCommand({
-        Destination: { ToAddresses: [sesToEmail] },
-        Message: {
-          Subject: { Data: `⏳ New Waitlist: ${plan} (${email})` },
-          Body: {
-            Html: { Data: htmlBody },
-          },
-        },
-        Source: 'notifications@getaiready.dev',
-      })
-    );
+    await sendEmail({
+      to: sesToEmail,
+      subject: `⏳ New Waitlist: ${plan} (${email})`,
+      htmlBody,
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error: any) {

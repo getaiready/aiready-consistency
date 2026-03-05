@@ -22,6 +22,9 @@ export default $config({
     // S3 Bucket for analysis data
     const bucket = new sst.aws.Bucket('AnalysisBucket');
 
+    // S3 Bucket for user submissions (feedback, waitlist)
+    const submissions = new sst.aws.Bucket('SubmissionsBucket');
+
     // SES Domain Configuration
     // Note: SES domain verification must be done manually in AWS Console
     // or via a separate Pulumi Cloudflare provider setup
@@ -62,6 +65,7 @@ export default $config({
       },
       environment: {
         S3_BUCKET: bucket.name,
+        SUBMISSIONS_BUCKET: submissions.name,
         DYNAMO_TABLE: table.name,
         // NextAuth v5 uses AUTH_URL and AUTH_SECRET
         // For SST dev mode, use localhost; for deployed stages use the actual URL
@@ -96,6 +100,7 @@ export default $config({
           process.env.STRIPE_PRICE_ID_ENTERPRISE || '',
         SES_DOMAIN: sesDomain,
         SES_FROM_EMAIL: `noreply@${sesDomain}`,
+        SES_TO_EMAIL: process.env.SES_TO_EMAIL || 'team@getaiready.dev',
       },
     };
 
@@ -145,7 +150,13 @@ export default $config({
 
     const site = new sst.aws.Nextjs('Dashboard', {
       ...siteConfig,
-      link: [table, bucket, scanQueue],
+      link: [table, bucket, scanQueue, submissions],
+      permissions: [
+        {
+          actions: ['ses:SendEmail', 'ses:SendRawEmail'],
+          resources: ['*'],
+        },
+      ],
     });
 
     return {

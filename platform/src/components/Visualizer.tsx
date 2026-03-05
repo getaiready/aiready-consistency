@@ -73,25 +73,25 @@ export default function Visualizer({ data, filters, onToggleFilter }: Props) {
               onClick={() => onToggleFilter?.('critical')}
             />
             <LegendItem
-              color="#ff9900"
+              color="#fbbf24"
               label="Major"
               active={filters?.major}
               onClick={() => onToggleFilter?.('major')}
             />
             <LegendItem
-              color="#ffd666"
+              color="#fde047"
               label="Minor"
               active={filters?.minor}
               onClick={() => onToggleFilter?.('minor')}
             />
             <LegendItem
-              color="#91d5ff"
+              color="#38bdf8"
               label="Info"
               active={filters?.info}
               onClick={() => onToggleFilter?.('info')}
             />
             <LegendItem
-              color="#97c2fc"
+              color="#818cf8"
               label="Healthy"
               active={filters?.healthy}
               onClick={() => onToggleFilter?.('healthy')}
@@ -105,19 +105,19 @@ export default function Visualizer({ data, filters, onToggleFilter }: Props) {
           </h4>
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-0.5 bg-cyan-400 opacity-50" />
+              <div className="w-6 h-0.5 bg-cyan-400 opacity-80" />
               <span className="text-[11px] font-bold text-slate-400">
                 Dependency
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-6 h-0.5 bg-amber-400 opacity-50" />
+              <div className="w-6 h-1 bg-amber-400 opacity-90" />
               <span className="text-[11px] font-bold text-slate-400">
                 Similarity
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-6 h-0.5 border-t border-dashed border-blue-400 opacity-50" />
+              <div className="w-6 h-0.5 border-t-2 border-dashed border-blue-400 opacity-80" />
               <span className="text-[11px] font-bold text-slate-400">
                 Reference
               </span>
@@ -340,14 +340,24 @@ function GraphCanvas({
         if (d.type === 'reference') return '#60a5fa'; // blue-400
         if (d.type === 'dependency') return '#22d3ee'; // cyan-400
         if (d.type === 'structural') return '#4f46e5'; // indigo-600
-        return '#ffffff11';
+        return '#ffffff22';
       })
-      .attr('stroke-opacity', (d: any) =>
-        d.type === 'structural' ? 0.1 : d.type === 'dependency' ? 0.2 : 0.4
-      )
-      .attr('stroke-width', (d: any) => (d.type === 'similarity' ? 2 : 1))
+      .attr('stroke-opacity', (d: any) => {
+        if (d.type === 'similarity') return 0.8;
+        if (d.type === 'reference') return 0.6;
+        if (d.type === 'dependency') return 0.6;
+        if (d.type === 'structural') return 0.3;
+        return 0.2;
+      })
+      .attr('stroke-width', (d: any) => {
+        if (d.type === 'similarity') return 3;
+        if (d.type === 'reference') return 2;
+        if (d.type === 'dependency') return 2;
+        if (d.type === 'structural') return 1.5;
+        return 1;
+      })
       .attr('stroke-dasharray', (d: any) =>
-        d.type === 'reference' ? '4,4' : null
+        d.type === 'reference' ? '6,4' : null
       );
 
     // Draw nodes

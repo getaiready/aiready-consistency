@@ -641,14 +641,14 @@ export default function DashboardClient({
                       <div className="flex gap-2">
                         <input
                           readOnly
-                          value={`[![AI-Readiness](https://getaiready.dev/api/repos/${repoForBadge.id}/badge)](https://getaiready.dev/dashboard)`}
+                          value={`[![AI-Readiness](https://platform.getaiready.dev/api/repos/${repoForBadge.id}/badge)](https://platform.getaiready.dev/dashboard)`}
                           className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 font-mono"
                         />
                         <button
                           onClick={() => {
                             if (repoForBadge) {
                               navigator.clipboard.writeText(
-                                `[![AI-Readiness](https://getaiready.dev/api/repos/${repoForBadge.id}/badge)](https://getaiready.dev/dashboard)`
+                                `[![AI-Readiness](https://platform.getaiready.dev/api/repos/${repoForBadge.id}/badge)](https://platform.getaiready.dev/dashboard)`
                               );
                               toast.success('Copied to clipboard!');
                             }
@@ -972,11 +972,11 @@ function RepoCard({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onScan}
-            disabled={scanning}
+            disabled={isScanning}
             className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-indigo-500/10 text-indigo-400 text-xs font-bold rounded-lg hover:bg-indigo-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-indigo-500/30"
           >
             <PlayIcon className="w-3.5 h-3.5" />
-            {scanning ? 'Scanning...' : 'Scan'}
+            {isScanning ? 'Scanning...' : 'Scan'}
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.02 }}

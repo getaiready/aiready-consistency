@@ -99,7 +99,7 @@ export class GraphBuilder {
         title,
         value: value || 5,
         tokenCost,
-        color: type === 'folder' ? '#4f46e5' : '#97c2fc',
+        color: type === 'folder' ? '#6366f1' : '#818cf8', // indigo-500 and indigo-400
         group: this.getPackageGroup(cleanId),
       };
       this.nodesMap.set(cleanId, node);
@@ -291,13 +291,13 @@ export class GraphBuilder {
         case 'critical':
           return '#ff4d4f';
         case 'major':
-          return '#ff9900';
+          return '#fbbf24'; // Brighter amber
         case 'minor':
-          return '#ffd666';
+          return '#fde047'; // Brighter yellow
         case 'info':
-          return '#91d5ff';
+          return '#38bdf8'; // Brighter sky blue
         default:
-          return '#97c2fc';
+          return '#818cf8'; // Brighter indigo for healthy
       }
     };
 
@@ -313,7 +313,7 @@ export class GraphBuilder {
         (e) => e.source === node.id && e.type === 'structural'
       );
       if (isFolder) {
-        node.color = '#4f46e5'; // Indigo-600 for domains
+        node.color = '#6366f1'; // Indigo-500 for domains
         node.severity = 'healthy';
         continue;
       }
