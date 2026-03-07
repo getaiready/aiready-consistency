@@ -3,3 +3,4 @@ packages:
   - 'landing'
   - 'platform'
   - 'integration-tests'
+  - 'vscode-extension'

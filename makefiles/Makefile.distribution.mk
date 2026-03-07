@@ -45,12 +45,12 @@ docker-test: ## Test Docker image
 
 vscode-package: ## Package VS Code extension as VSIX
 	@echo "$(CYAN)📦 Packaging VS Code extension...$(RESET)"
-	cd packages/vscode-extension && pnpm install && pnpm run package
+	cd vscode-extension && pnpm install && pnpm run package
 	@echo "$(GREEN)✅ VS Code extension packaged$(RESET)"
 
 vscode-publish: ## Publish VS Code extension to Marketplace
 	@echo "$(CYAN)🚀 Publishing VS Code extension...$(RESET)"
-	cd packages/vscode-extension && vsce publish
+	cd vscode-extension && vsce publish
 	@echo "$(GREEN)✅ VS Code extension published$(RESET)"
 
 # ============================================================================

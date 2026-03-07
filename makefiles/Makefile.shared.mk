@@ -21,14 +21,17 @@ endif
 # Exclude skills (skills.sh distribution only, not npm)
 ALL_SPOKES := $(filter-out skills, $(notdir $(wildcard packages/*)))
 
+# Project directory definitions
+LANDING_DIR := $(ROOT_DIR)/landing
+PLATFORM_DIR := $(ROOT_DIR)/platform
+EXTENSION_DIR := $(ROOT_DIR)/vscode-extension
+
 # Three-phase release strategy (matches release-all workflow)
 # Landing site is EXCLUDED from release-all (different release cadence)
 # Skills is EXCLUDED - it's distributed via skills.sh, not npm
-# VS Code extension is EXCLUDED from NPM publishing - published to VS Code Marketplace
 CORE_SPOKE := core
 CLI_SPOKE := cli
-# VS Code extension should be synced to GitHub but NOT published to NPM via release-all
-MIDDLE_SPOKES := $(filter-out core cli vscode-extension, $(sort $(ALL_SPOKES)))
+MIDDLE_SPOKES := $(filter-out core cli, $(sort $(ALL_SPOKES)))
 
 # Legacy: Sequential release order (deprecated - use phase variables above)
 RELEASE_ORDER := core $(MIDDLE_SPOKES) cli

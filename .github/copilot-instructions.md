@@ -24,7 +24,7 @@ AIReady is a monorepo with tools for assessing AI-readiness and improving AI lev
 
 **Extension:**
 
-- **[aiready](packages/vscode-extension)** - VS Code extension - v0.3.5
+- **[aiready](vscode-extension)** - VS Code extension - v0.3.5
 
 ### Distribution Channels
 
@@ -118,9 +118,9 @@ make sync                    # Sync all spokes to GitHub repos
 
 ### VS Code Extension
 
-- Location: `packages/vscode-extension/`
+- Location: `vscode-extension/`
 - Publisher: `pengcao`
-- Requires `VSCE_PAT` in `packages/vscode-extension/.env`
+- Requires `VSCE_PAT` in `vscode-extension/.env`
 - Market: https://marketplace.visualstudio.com/items?itemName=pengcao.aiready
 
 ### GitHub Action
@@ -163,7 +163,7 @@ make sync                    # Sync all spokes to GitHub repos
 - **GIT:** Is this change in the monorepo or a spoke repo?
 - **RELEASE:** After publishing ANY spoke separately, did I republish CLI? (Required!)
 - **RELEASE:** Am I excluding landing from release-all? (It has separate workflow)
-- **PUBLISH:** For VS Code extension, is VSCE_PAT set in packages/vscode-extension/.env?
+- **PUBLISH:** For VS Code extension, is VSCE_PAT set in vscode-extension/.env?
 
 ## Getting Help
 

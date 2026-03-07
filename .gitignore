@@ -86,4 +86,4 @@ secrets/
 packages/visualizer/web/report-data.json
 landing/next-env.d.ts
 next-env.d.ts
-packages/vscode-extension/.env
+vscode-extension/.env

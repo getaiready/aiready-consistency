@@ -90,6 +90,18 @@ define commit_and_tag_platform
 	$(call log_success,Committed and tagged $$tag_name)
 endef
 
+# Internal: commit + tag for vscode-extension after version bump
+define commit_and_tag_vscode
+	version=$$(node -p "require('$(EXTENSION_DIR)/package.json').version"); \
+	$(call log_step,Committing aiready VS Code extension v$$version...); \
+	cd $(ROOT_DIR) && git add vscode-extension/package.json; \
+	cd $(ROOT_DIR) && git commit -m "chore(release): vscode-extension v$$version"; \
+	tag_name="vscode-extension-v$$version"; \
+	$(call log_step,Tagging $$tag_name...); \
+	cd $(ROOT_DIR) && git tag -a "$$tag_name" -m "Release VS Code extension v$$version"; \
+	$(call log_success,Committed and tagged $$tag_name)
+endef
+
 # Internal: tag platform dev release (no version bump commit)
 define tag_platform_dev
 	version=$$(node -p "require('$(PLATFORM_DIR)/package.json').version"); \
@@ -141,6 +153,23 @@ version-platform-major: ## Bump platform version (major)
 	@$(call log_step,Bumping @aiready/platform version (major)...)
 	@cd $(PLATFORM_DIR) && npm version major --no-git-tag-version
 	@$(call log_success,Platform version bumped to $$(node -p "require('$(PLATFORM_DIR)/package.json').version"))
+
+##@ VS Code Extension Version Management
+
+version-vscode-patch: ## Bump vscode-extension version (patch)
+	@$(call log_step,Bumping VS Code extension version (patch)...)
+	@cd $(EXTENSION_DIR) && npm version patch --no-git-tag-version
+	@$(call log_success,VS Code extension version bumped to $$(node -p "require('$(EXTENSION_DIR)/package.json').version"))
+
+version-vscode-minor: ## Bump vscode-extension version (minor)
+	@$(call log_step,Bumping VS Code extension version (minor)...)
+	@cd $(EXTENSION_DIR) && npm version minor --no-git-tag-version
+	@$(call log_success,VS Code extension version bumped to $$(node -p "require('$(EXTENSION_DIR)/package.json').version"))
+
+version-vscode-major: ## Bump vscode-extension version (major)
+	@$(call log_step,Bumping VS Code extension version (major)...)
+	@cd $(EXTENSION_DIR) && npm version major --no-git-tag-version
+	@$(call log_success,VS Code extension version bumped to $$(node -p "require('$(EXTENSION_DIR)/package.json').version"))
 
 ##@ Landing Release
 
@@ -221,6 +250,33 @@ release-platform: ## Release platform: TYPE=patch|minor|major
 	$(call log_step,Pushing monorepo branch and tags...); \
 	cd $(ROOT_DIR) && git push origin $(TARGET_BRANCH) --follow-tags; \
 	$(call log_success,Release finished for @aiready/platform)
+
+##@ VS Code Extension Release
+
+release-vscode: ## Release VS Code extension: TYPE=patch|minor|major
+	@if [ -z "$(TYPE)" ]; then \
+		$(call log_error,TYPE parameter required. Usage: make $@ TYPE=minor); \
+		exit 1; \
+	fi
+	@bump_target="version-vscode-$(TYPE)"; \
+	if [ "$(TYPE)" != "patch" ] && [ "$(TYPE)" != "minor" ] && [ "$(TYPE)" != "major" ]; then \
+		$(call log_error,Invalid TYPE '$(TYPE)'. Expected patch|minor|major); \
+		exit 1; \
+	fi; \
+	$(MAKE) -C $(ROOT_DIR) $$bump_target; \
+	$(call log_success,Version bump complete for VS Code extension); \
+	$(call commit_and_tag_vscode); \
+	$(call log_step,Building VS Code extension...); \
+	cd $(EXTENSION_DIR) && pnpm build || { \
+		$(call log_error,Build failed for VS Code extension. Aborting release.); \
+		exit 1; \
+	}; \
+	$(call log_success,Build complete); \
+	$(call log_step,Syncing VS Code extension to GitHub sub-repo...); \
+	$(MAKE) -C $(ROOT_DIR) publish-vscode-sync OWNER=$(OWNER); \
+	$(call log_step,Pushing monorepo branch and tags...); \
+	cd $(ROOT_DIR) && git push origin $(TARGET_BRANCH) --follow-tags; \
+	$(call log_success,Release finished for VS Code extension)
 
 ##@ Package Release
 
@@ -364,7 +420,7 @@ release-all: ## Release all spokes: TYPE=patch|minor|major (excludes landing)
 	}; \
 	$(call log_success,Downstream safety checks passed); \
 	$(call log_step,Phase 3: Version bumping all spokes...); \
-	for spoke in $(CORE_SPOKE) $(MIDDLE_SPOKES) vscode-extension $(CLI_SPOKE); do \
+	for spoke in $(CORE_SPOKE) $(MIDDLE_SPOKES) $(CLI_SPOKE); do \
 		$(call log_info,Bumping @aiready/$$spoke...); \
 		$(MAKE) -C $(ROOT_DIR) $$bump_target SPOKE=$$spoke || exit 1; \
 		$(call log_success,Version bumped for @aiready/$$spoke); \
@@ -375,7 +431,7 @@ release-all: ## Release all spokes: TYPE=patch|minor|major (excludes landing)
 	if [ -f "$(ROOT_DIR)/platform/package.json" ]; then git add platform/package.json; fi; \
 	cd $(ROOT_DIR) && git commit -m "chore(release): version bumps across spokes" || $(call log_info,No changes to commit); \
 	$(call log_step,Phase 4.5: Tagging each spoke...); \
-	for spoke in $(CORE_SPOKE) $(MIDDLE_SPOKES) vscode-extension $(CLI_SPOKE); do \
+	for spoke in $(CORE_SPOKE) $(MIDDLE_SPOKES) $(CLI_SPOKE); do \
 		version=$$(node -p "require('$(ROOT_DIR)/packages/$$spoke/package.json').version"); \
 		tag_name="$$spoke-v$$version"; \
 		$(call log_step,Tagging $$tag_name...); \
@@ -391,9 +447,6 @@ release-all: ## Release all spokes: TYPE=patch|minor|major (excludes landing)
 	$(MAKE) -C $(ROOT_DIR) npm-publish SPOKE=$(CLI_SPOKE) || exit 1; \
 	$(MAKE) -C $(ROOT_DIR) publish SPOKE=$(CLI_SPOKE) OWNER=$(OWNER) || exit 1; \
 	$(call log_success,Published @aiready/$(CLI_SPOKE)); \
-	$(call log_step,Phase 7.5: Syncing VS Code extension... (Not on NPM)); \
-	$(MAKE) -C $(ROOT_DIR) publish SPOKE=vscode-extension OWNER=$(OWNER) || exit 1; \
-	$(call log_success,Synced VS Code extension to GitHub); \
 	$(call log_step,Phase 8: Pushing all changes to monorepo...); \
 	cd $(ROOT_DIR) && git push origin $(TARGET_BRANCH) --follow-tags; \
 	$(call log_success,🎉 All spokes released successfully in proper order: core → middle → cli)
@@ -453,6 +506,19 @@ release-status: ## Show local and npm registry versions for all spokes + landing
 			status="$(CYAN)ahead$(RESET_COLOR)"; \
 		fi; \
 		printf "%-30s %-15s %-15s %-10b\n" "@aiready/landing" "$$local_ver" "$$last_tag" "$$status"; \
+	fi; \
+	if [ -f "$(EXTENSION_DIR)/package.json" ]; then \
+		local_ver=$$(node -p "require('$(EXTENSION_DIR)/package.json').version" 2>/dev/null || echo "n/a"); \
+		last_tag=$$(git for-each-ref 'refs/tags/vscode-extension-v*' --sort=-creatordate --format '%(refname:short)' | head -n1 | sed 's/vscode-extension-v//'); \
+		if [ -z "$$last_tag" ]; then \
+			last_tag="n/a"; \
+			status="$(YELLOW)new$(RESET_COLOR)"; \
+		elif [ "$$local_ver" = "$$last_tag" ]; then \
+			status="$(GREEN)✓$(RESET_COLOR)"; \
+		else \
+			status="$(CYAN)ahead$(RESET_COLOR)"; \
+		fi; \
+		printf "%-30s %-15s %-15s %-10b\n" "vscode-extension" "$$local_ver" "$$last_tag" "$$status"; \
 	fi; \
 	echo ""; \
 	$(call log_success,Status collected)

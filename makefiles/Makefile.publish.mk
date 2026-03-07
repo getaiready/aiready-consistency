@@ -340,7 +340,7 @@ sync: ## Push monorepo to origin and sync all spokes to their public repos. Use 
 	@git push origin $(TARGET_BRANCH)
 	@$(call log_success,Pushed to monorepo)
 	@$(call log_step,Syncing relevant repositories in parallel...)
-	@$(MAKE) $(MAKE_PARALLEL) $(addprefix github-sync-spoke-,$(ALL_SPOKES)) github-sync-landing CHANGED_FILES="$$CHANGED_FILES" FORCE="$(FORCE)"
+	@$(MAKE) $(MAKE_PARALLEL) $(addprefix github-sync-spoke-,$(ALL_SPOKES)) github-sync-landing github-sync-vscode CHANGED_FILES="$$CHANGED_FILES" FORCE="$(FORCE)"
 	@$(call log_success,Sync process completed)
 
 .PHONY: github-sync-spoke-%
@@ -367,9 +367,44 @@ github-sync-landing:
 		$(MAKE) publish-landing OWNER=$(OWNER) 2>&1 | grep -E '(SUCCESS|ERROR|Synced|tag pushed)' || true; \
 	fi
 
+.PHONY: github-sync-vscode
+github-sync-vscode:
+	@should_sync=false; \
+	if [ "$(FORCE)" = "true" ] || [ "$(CHANGED_FILES)" = "FORCE_ALL" ] || echo "$(CHANGED_FILES)" | grep -q "vscode-extension/"; then \
+		should_sync=true; \
+	fi; \
+	if [ "$$should_sync" = "true" ]; then \
+		$(call log_step,Syncing VS Code extension repository...); \
+		$(MAKE) publish-vscode-sync OWNER=$(OWNER) 2>&1 | grep -E '(SUCCESS|ERROR|Synced|tag pushed)' || true; \
+	fi
+
 deploy: sync ## Alias for sync (push monorepo + publish all spokes)
 	@:-pattern-detect ## Build and publish all packages to npm
 	@$(call log_success,All packages published to npm)
+
+publish-vscode-sync: ## Sync VS Code extension to GitHub. Usage: make publish-vscode-sync [OWNER=username]
+	@$(call log_step,Publishing VS Code extension to GitHub...)
+	@url="https://github.com/$(OWNER)/aiready-vscode.git"; \
+	remote="aiready-vscode"; \
+	branch="publish-vscode"; \
+	git remote add "$$remote" "$$url" 2>/dev/null || git remote set-url "$$remote" "$$url"; \
+	$(call log_info,Remote set: $$remote -> $$url); \
+	git branch -D "$$branch" >/dev/null 2>&1 || true; \
+	git subtree split --prefix=vscode-extension -b "$$branch" >/dev/null; \
+	$(call log_info,Subtree split complete: $$branch); \
+	split_commit=$$(git rev-parse "$$branch"); \
+	git push -f "$$remote" "$$branch":$(TARGET_BRANCH); \
+	$(call log_success,Synced VS Code extension to GitHub spoke repo ($(TARGET_BRANCH))); \
+	version=$$(node -p "require('./vscode-extension/package.json').version"); \
+	spoke_tag="v$$version"; \
+	$(call log_step,Tagging spoke repo commit $$split_commit as $$spoke_tag...); \
+	if git ls-remote --tags "$$remote" "$$spoke_tag" | grep -q "$$spoke_tag"; then \
+		$(call log_info,Spoke tag $$spoke_tag already exists on $$remote; skipping); \
+	else \
+		git tag -a "$$spoke_tag" "$$split_commit" -m "Release VS Code extension $$version"; \
+		git push "$$remote" "$$spoke_tag"; \
+		$(call log_success,Spoke tag pushed: $$spoke_tag); \
+	fi
 
 # ============================================================================
 # VS Code Extension Publishing
@@ -377,15 +412,15 @@ deploy: sync ## Alias for sync (push monorepo + publish all spokes)
 
 publish-vscode: ## Publish VS Code extension to Marketplace (requires VSCE_PAT env var)
 	@$(call log_step,Publishing VS Code extension...); \
-	if [ -f packages/vscode-extension/.env ]; then \
-		echo "[INFO] Loading VSCE_PAT and OVSX_PAT from packages/vscode-extension/.env"; \
-		set -a; . packages/vscode-extension/.env; set +a; \
+	if [ -f vscode-extension/.env ]; then \
+		echo "[INFO] Loading VSCE_PAT and OVSX_PAT from vscode-extension/.env"; \
+		set -a; . vscode-extension/.env; set +a; \
 	fi; \
 	if [ -z "$$VSCE_PAT" ]; then \
-		echo "[ERROR] VSCE_PAT not set. Add it to packages/vscode-extension/.env or export VSCE_PAT=your_token"; \
+		echo "[ERROR] VSCE_PAT not set. Add it to vscode-extension/.env or export VSCE_PAT=your_token"; \
 		exit 1; \
 	fi; \
-	cd packages/vscode-extension && \
+	cd vscode-extension && \
 	echo "[INFO] Bumping version..." && \
 	npm version $(if $(TYPE),$(TYPE),patch) --no-git-tag-version --workspaces-update=false && \
 	pnpm run compile && \

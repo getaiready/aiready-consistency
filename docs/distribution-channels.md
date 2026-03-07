@@ -223,9 +223,9 @@ jobs:
 
 ### Files Created
 
-- `packages/vscode-extension/package.json` - Extension manifest
-- `packages/vscode-extension/src/extension.ts` - Extension source
-- `packages/vscode-extension/README.md` - Extension README
+- `vscode-extension/package.json` - Extension manifest
+- `vscode-extension/src/extension.ts` - Extension source
+- `vscode-extension/README.md` - Extension README
 
 ### Features
 
@@ -244,7 +244,7 @@ make vscode-package
 make vscode-publish
 
 # Or manually
-cd packages/vscode-extension
+cd vscode-extension
 pnpm install
 pnpm run package
 vsce publish
