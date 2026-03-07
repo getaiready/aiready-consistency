@@ -7,6 +7,7 @@ import {
   Metrics,
   AnalysisResult,
   ModelTier,
+  ToolName,
 } from './types/schema';
 
 // Re-export specific common types as needed (though schema.ts exports them too)
@@ -228,14 +229,11 @@ export interface AIReadyConfig {
       domainPatterns?: string[]; // regex strings to match domains (e.g., ['^ord(er)?$', '^(inv|invoice)$'])
       pathDomainMap?: Record<string, string>; // map of path segment -> domain (e.g., {'orders': 'order'})
     };
-    consistency?: {
+    [ToolName.NamingConsistency]?: {
       enabled?: boolean;
       scoreWeight?: number;
-      // Custom abbreviations to accept (domain-specific terms)
-      acceptedAbbreviations?: string[]; // e.g., ['ses', 'gst', 'cdk', 'btn', 'buf', 'agg']
-      // Custom short words that are full English words, not abbreviations
-      shortWords?: string[]; // e.g., ['oak', 'elm', 'ash'] for tree species
-      // Disable specific checks
+      acceptedAbbreviations?: string[];
+      shortWords?: string[];
       disableChecks?: (
         | 'single-letter'
         | 'abbreviation'
@@ -243,6 +241,45 @@ export interface AIReadyConfig {
         | 'unclear'
         | 'poor-naming'
       )[];
+    };
+    [ToolName.AiSignalClarity]?: {
+      enabled?: boolean;
+      scoreWeight?: number;
+      checkMagicLiterals?: boolean;
+      checkBooleanTraps?: boolean;
+      checkAmbiguousNames?: boolean;
+      checkUndocumentedExports?: boolean;
+      checkImplicitSideEffects?: boolean;
+      checkDeepCallbacks?: boolean;
+      minSeverity?: string;
+    };
+    [ToolName.AgentGrounding]?: {
+      enabled?: boolean;
+      scoreWeight?: number;
+      maxRecommendedDepth?: number;
+      readmeStaleDays?: number;
+      additionalVagueNames?: string[];
+    };
+    [ToolName.TestabilityIndex]?: {
+      enabled?: boolean;
+      scoreWeight?: number;
+      minCoverageRatio?: number;
+      testPatterns?: string[];
+    };
+    [ToolName.DocDrift]?: {
+      enabled?: boolean;
+      scoreWeight?: number;
+      maxCommits?: number;
+      staleMonths?: number;
+    };
+    [ToolName.DependencyHealth]?: {
+      enabled?: boolean;
+      scoreWeight?: number;
+      trainingCutoffYear?: number;
+    };
+    [ToolName.ChangeAmplification]?: {
+      enabled?: boolean;
+      scoreWeight?: number;
     };
     [toolName: string]:
       | {
