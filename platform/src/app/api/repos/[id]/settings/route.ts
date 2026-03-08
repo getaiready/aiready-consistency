@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/app/api/auth/[...nextauth]/route';
+import { auth } from '@/lib/auth';
 import { getRepository, updateRepositoryConfig } from '@/lib/db';
 
 // GET /api/repos/[repoId]/settings - Get repository settings
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ repoId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -13,7 +13,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { repoId } = await params;
+    const { id } = await params;
+    const repoId = id;
     const repo = await getRepository(repoId);
 
     if (!repo) {
@@ -43,7 +44,7 @@ export async function GET(
 // PATCH /api/repos/[repoId]/settings - Update repository settings
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ repoId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -51,7 +52,8 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { repoId } = await params;
+    const { id } = await params;
+    const repoId = id;
     const body = await request.json();
     const { settings } = body; // settings can be null for reset
 

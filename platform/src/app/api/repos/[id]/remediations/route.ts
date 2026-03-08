@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { auth } from '@/lib/auth';
 import { listRemediations } from '@/lib/db/remediation';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -12,7 +12,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const remediations = await listRemediations(params.id);
+    const { id } = await params;
+    const remediations = await listRemediations(id);
     return NextResponse.json({ remediations });
   } catch (error) {
     console.error('[RemediationsAPI] Error:', error);

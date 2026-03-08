@@ -1,23 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRepositoryMetrics } from '@/lib/db';
-import { auth } from '@/auth';
+import { auth } from '@/lib/auth';
+import { getRepositoryMetrics, getRepository } from '@/lib/db';
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const repoId = params.id;
-    const { searchParams } = new URL(req.url);
-    const metricType = searchParams.get('type') || undefined;
-    const limit = parseInt(searchParams.get('limit') || '100');
+    const { id } = await params;
+    const repoId = id;
 
-    // Fetch metrics from DB
+    // Verify ownership
+    const repo = await getRepository(repoId);
+    if (!repo) {
+      return NextResponse.json(
+        { error: 'Repository not found' },
+        { status: 404 }
+      );
+    }
+    if (repo.userId !== session.user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    const searchParams = request.nextUrl.searchParams;
+    const metricType = searchParams.get('type') || undefined;
+    const limit = parseInt(searchParams.get('limit') || '50');
+
     const metrics = await getRepositoryMetrics({
       repoId,
       metricType,
@@ -26,9 +39,9 @@ export async function GET(
 
     return NextResponse.json({ metrics });
   } catch (error) {
-    console.error('[MetricsAPI] Error fetching metrics:', error);
+    console.error('Failed to fetch repository metrics:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
