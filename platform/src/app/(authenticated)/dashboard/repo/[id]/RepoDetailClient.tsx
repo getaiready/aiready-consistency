@@ -23,7 +23,7 @@ import { MethodologyPanel } from '@/components/MethodologyPanel';
 import CodeBlock from '@/components/CodeBlock';
 import { TrendCharts } from './components/TrendCharts';
 import { BenchmarkCard } from './components/BenchmarkCard';
-import { metrics as metricDefinitions } from '@/app/metrics/constants';
+import { metrics as metricDefinitions } from '@/app/(authenticated)/metrics/constants';
 import { toast } from 'sonner';
 import { Icon } from '@/components/Icon';
 import { auth } from '@/lib/auth';
