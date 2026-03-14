@@ -1,5 +1,5 @@
 const meta = {
-  title: 'The Agentic Wall: Why Your Best Prompts Fail on Complex Repos',
+  title: 'Part 1: The Agentic Wall (Context Fragmentation)',
   date: '2026-02-24',
   excerpt:
     "Prompts that work on small repos often fail on large ones. Discover the 'Agentic Wall' and how to measure the Navigation Tax that's slowing down your AI agents.",
@@ -15,6 +15,7 @@ const meta = {
   ],
   readingTime: '5 min read',
   slug: 'the-agentic-wall',
+  cover: '/agentic-shift-series-1.png',
 };
 
 export default meta;

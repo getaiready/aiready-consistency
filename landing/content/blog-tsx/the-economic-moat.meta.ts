@@ -1,5 +1,5 @@
 const meta = {
-  title: 'The Economic Moat: Quantifying your AI ROI',
+  title: 'Part 3: The Economic Moat (Quantifying AI ROI)',
   date: '2026-02-20',
   excerpt:
     'Intelligence is becoming a commodity, so the competitive advantage shifts to Context. Learn how to turn Technical Debt into a Token Budget and build your economic moat.',

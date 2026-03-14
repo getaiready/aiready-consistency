@@ -1,5 +1,5 @@
 const meta = {
-  title: 'Observability as Intelligence: Machines that Self-Critique',
+  title: 'Part 8: Observability as Intelligence (Self-Critique)',
   date: '2026-03-06',
   excerpt:
     "Most AI systems wait for humans to find bugs. Learn how autonomous 'Gap Detection Loops' transform raw logs into actionable intelligence and self-correction mandates.",
