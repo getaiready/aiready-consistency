@@ -35,6 +35,10 @@ export async function analyzeNamingGeneralized(
 
         if (exp.type === 'class') {
           pattern = conventions.classPattern;
+        } else if (exp.type === 'interface' && conventions.interfacePattern) {
+          pattern = conventions.interfacePattern;
+        } else if (exp.type === 'type' && conventions.typePattern) {
+          pattern = conventions.typePattern;
         } else if (exp.type === 'function') {
           pattern = conventions.functionPattern;
         } else if (exp.type === 'const') {
