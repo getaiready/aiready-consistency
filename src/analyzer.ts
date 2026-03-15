@@ -95,6 +95,20 @@ export async function analyzeConsistency(
     });
   }
 
+  // Generate high-level recommendations
+  const recommendations: string[] = [];
+  if (namingIssues.length > 0) {
+    recommendations.push('Standardize naming conventions across the codebase');
+  }
+  if (patternIssues.length > 0) {
+    recommendations.push('Consolidate repetitive implementation patterns');
+  }
+  if (results.some((r) => (r.metrics?.consistencyScore ?? 1) < 0.8)) {
+    recommendations.push(
+      'Improve cross-module consistency to reduce AI confusion'
+    );
+  }
+
   return {
     results,
     summary: {
@@ -104,7 +118,7 @@ export async function analyzeConsistency(
       patternIssues: patternIssues.length,
       architectureIssues: 0,
     },
-    recommendations: [],
+    recommendations,
     metadata: {
       toolName: 'naming-consistency',
       timestamp: new Date().toISOString(),
