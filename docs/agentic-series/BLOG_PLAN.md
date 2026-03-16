@@ -8,8 +8,8 @@ This series explores the evolution of software engineering from human-centric "r
 
 - **Series Status**: In Progress
 - **Total Posts**: 12
-- **Completed**: 1 (Published)
-- **Next Up**: Post 2: Beyond the Sidekick
+- **Completed**: 4 (Published)
+- **Next Up**: Post 5: Closing the Loop
 
 ---
 
@@ -30,17 +30,16 @@ This series explores the evolution of software engineering from human-centric "r
   - **Focus**: Turning Technical Debt into a Token Budget. Linking Fragmentation Scores to real-world model pricing.
   - **Draft**: [part-8-the-economic-moat.md](../../landing/blog-posts/part-8-the-economic-moat.md)
 
-- [/] **Post 4: The Neural Spine: Event-Driven Orchestration**
-  - **Status**: Drafted
+- [x] **Post 4: The Neural Spine: Event-Driven Orchestration**
+  - **Status**: Published
   - **Focus**: Why synchronous "agent loops" fail and why an asynchronous backbone (EventBridge) is required.
-  - **Draft**: [agentic-series-part-4-the-neural-spine.md](../../landing/blog-posts/agentic-series-part-4-the-neural-spine.md)
-  - **TSX**: [clawmore/app/blog/eventbridge-the-neural-spine/page.tsx](../../clawmore/app/blog/eventbridge-the-neural-spine/page.tsx)
+  - **Link**: [/blog/the-neural-spine](/blog/the-neural-spine)
 
-- [ ] **Post 4: Closing the Evolution Loop: Git as a Runtime**
-  - **Status**: Planned
+- [x] **Post 5: Closing the Evolution Loop: Git as a Runtime**
+  - **Status**: Drafted (LinkedIn)
   - **Focus**: The breakthrough of having agents write code and commit it back to Git.
 
-- [ ] **Post 5: Cognitive Tiering: Managing the Multi-Headed Brain**
+- [ ] **Post 6: Cognitive Tiering: Managing the Multi-Headed Brain**
   - **Status**: Planned
   - **Focus**: Tiered memory architectures (Facts vs. Lessons vs. Gaps) and the end of "Prompt Bloat".
 
