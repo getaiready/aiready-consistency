@@ -13,10 +13,10 @@ export async function uploadAction(file: string, options: UploadOptions) {
   const startTime = Date.now();
   const filePath = resolvePath(process.cwd(), file);
   const serverUrl =
-    options.server ||
-    process.env.AIREADY_SERVER ||
+    options.server ??
+    process.env.AIREADY_SERVER ??
     'https://dev.platform.getaiready.dev';
-  const apiKey = options.apiKey || process.env.AIREADY_API_KEY;
+  const apiKey = options.apiKey ?? process.env.AIREADY_API_KEY;
 
   if (!apiKey) {
     console.error(chalk.red('❌ API Key is required for upload.'));
@@ -49,7 +49,7 @@ export async function uploadAction(file: string, options: UploadOptions) {
 
     // Prepare upload payload
     // Note: repoId is optional if the metadata contains it, but for now we'll require it or infer from metadata
-    const repoId = options.repoId || reportData.repository?.repoId;
+    const repoId = options.repoId ?? reportData.repository?.repoId;
 
     const response = await fetch(`${serverUrl}/api/analysis/upload`, {
       method: 'POST',
@@ -70,13 +70,13 @@ export async function uploadAction(file: string, options: UploadOptions) {
       uploadResult = await response.json();
     } else {
       const text = await response.text();
-      uploadResult = { error: text || response.statusText };
+      uploadResult = { error: text ?? response.statusText };
     }
 
     if (!response.ok) {
       console.error(
         chalk.red(
-          `❌ Upload failed: ${uploadResult.error || response.statusText}`
+          `❌ Upload failed: ${uploadResult.error ?? response.statusText}`
         )
       );
 

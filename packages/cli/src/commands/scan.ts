@@ -57,7 +57,7 @@ export async function scanAction(directory: string, options: ScanOptions) {
   console.log(chalk.blue('🚀 Starting AIReady unified analysis...\n'));
 
   const startTime = Date.now();
-  const resolvedDir = resolvePath(process.cwd(), directory || '.');
+  const resolvedDir = resolvePath(process.cwd(), directory ?? '.');
   const repoMetadata = getRepoMetadata(resolvedDir);
 
   try {
@@ -159,7 +159,7 @@ export async function scanAction(directory: string, options: ScanOptions) {
       const { getSmartDefaults } = await import('@aiready/pattern-detect');
       const patternSmartDefaults = await getSmartDefaults(
         resolvedDir,
-        finalOptions.toolConfigs?.[ToolName.PatternDetect] || {}
+        finalOptions.toolConfigs?.[ToolName.PatternDetect] ?? {}
       );
 
       // Merge smart defaults into toolConfigs instead of root level
@@ -173,7 +173,7 @@ export async function scanAction(directory: string, options: ScanOptions) {
     console.log(chalk.cyan('\n=== AIReady Run Preview ==='));
     console.log(
       chalk.white('Tools to run:'),
-      (finalOptions.tools || []).join(', ')
+      (finalOptions.tools ?? []).join(', ')
     );
 
     // Dynamic progress callback
@@ -202,7 +202,7 @@ export async function scanAction(directory: string, options: ScanOptions) {
 
     // Determine scoring profile for project-type-aware weighting
     const scoringProfile =
-      options.profile || baseOptions.scoring?.profile || 'default';
+      options.profile ?? baseOptions.scoring?.profile ?? 'default';
 
     const results = await analyzeUnified({
       ...finalOptions,
@@ -233,7 +233,7 @@ export async function scanAction(directory: string, options: ScanOptions) {
             readFileSync(resolvePath(process.cwd(), options.compareTo), 'utf8')
           );
           const prevScore =
-            prevReport.scoring?.overall || prevReport.scoring?.score;
+            prevReport.scoring?.overall ?? prevReport.scoring?.score;
           if (typeof prevScore === 'number') {
             const diff = scoringResult.overall - prevScore;
             const diffStr = diff > 0 ? `+${diff}` : String(diff);
@@ -262,19 +262,19 @@ export async function scanAction(directory: string, options: ScanOptions) {
       }
 
       // Token Budget & Cost Logic
-      const totalWastedDuplication = (scoringResult.breakdown || []).reduce(
+      const totalWastedDuplication = (scoringResult.breakdown ?? []).reduce(
         (sum: number, s: any) =>
-          sum + (s.tokenBudget?.wastedTokens.bySource.duplication || 0),
+          sum + (s.tokenBudget?.wastedTokens?.bySource?.duplication ?? 0),
         0
       );
-      const totalWastedFragmentation = (scoringResult.breakdown || []).reduce(
+      const totalWastedFragmentation = (scoringResult.breakdown ?? []).reduce(
         (sum: number, s: any) =>
-          sum + (s.tokenBudget?.wastedTokens.bySource.fragmentation || 0),
+          sum + (s.tokenBudget?.wastedTokens?.bySource?.fragmentation ?? 0),
         0
       );
       const totalContext = Math.max(
-        ...(scoringResult.breakdown || []).map(
-          (s: any) => s.tokenBudget?.totalContextTokens || 0
+        ...(scoringResult.breakdown ?? []).map(
+          (s: any) => s.tokenBudget?.totalContextTokens ?? 0
         ),
         0
       );
@@ -300,7 +300,7 @@ export async function scanAction(directory: string, options: ScanOptions) {
           }
         }
 
-        const modelId = options.model || 'gpt-5.4-mini';
+        const modelId = options.model ?? 'gpt-5.4-mini';
         const roi = (await import('@aiready/core')).calculateBusinessROI({
           tokenWaste: unifiedBudget.wastedTokens.total,
           issues: allIssues,
@@ -345,9 +345,9 @@ export async function scanAction(directory: string, options: ScanOptions) {
 
     // Output persistence
     const outputFormat =
-      options.output || finalOptions.output?.format || 'console';
+      options.output ?? finalOptions.output?.format ?? 'console';
     const outputPath = resolveOutputPath(
-      options.outputFile || finalOptions.output?.file,
+      options.outputFile ?? finalOptions.output?.file,
       `aiready-report-${getReportTimestamp()}.json`,
       resolvedDir
     );
@@ -380,8 +380,8 @@ export async function scanAction(directory: string, options: ScanOptions) {
       const threshold = options.threshold
         ? parseInt(options.threshold)
         : undefined;
-      const failOnLevel = options.failOn || 'critical';
-      const isCI = options.ci || process.env.CI === 'true';
+      const failOnLevel = options.failOn ?? 'critical';
+      const isCI = options.ci ?? process.env.CI === 'true';
 
       let shouldFail = false;
       let failReason = '';

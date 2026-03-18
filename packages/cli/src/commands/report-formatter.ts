@@ -16,7 +16,7 @@ import {
 export function printScanSummary(results: any, startTime: number) {
   console.log(chalk.cyan('\n=== AIReady Run Summary ==='));
   console.log(
-    `  Total issues (all tools): ${chalk.bold(String(results.summary.totalIssues || 0))}`
+    `  Total issues (all tools): ${chalk.bold(String(results.summary.totalIssues ?? 0))}`
   );
   console.log(
     `  Execution time: ${chalk.bold(((Date.now() - startTime) / 1000).toFixed(2) + 's')}`
@@ -72,7 +72,7 @@ export function printScoring(
     // Top Actionable Recommendations
     const allRecs = scoringResult.breakdown
       .flatMap((t: any) =>
-        (t.recommendations || []).map((r: any) => ({ ...r, tool: t.toolName }))
+        (t.recommendations ?? []).map((r: any) => ({ ...r, tool: t.toolName }))
       )
       .sort((a: any, b: any) => b.estimatedImpact - a.estimatedImpact)
       .slice(0, 3);

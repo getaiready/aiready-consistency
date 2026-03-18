@@ -32,7 +32,7 @@ export async function contextAction(
   console.log(chalk.blue('🧠 Analyzing context costs...\n'));
 
   const startTime = Date.now();
-  const resolvedDir = resolvePath(process.cwd(), directory || '.');
+  const resolvedDir = resolvePath(process.cwd(), directory ?? '.');
 
   try {
     // Define defaults
@@ -94,8 +94,8 @@ export async function contextAction(
     }
 
     const outputFormat =
-      options.output || finalOptions.output?.format || 'console';
-    const userOutputFile = options.outputFile || finalOptions.output?.file;
+      options.output ?? finalOptions.output?.format ?? 'console';
+    const userOutputFile = options.outputFile ?? finalOptions.output?.file;
 
     if (outputFormat === 'json') {
       const outputData = {
@@ -117,7 +117,7 @@ export async function contextAction(
       );
     } else {
       // Console output - format the results nicely
-      const terminalWidth = process.stdout.columns || 80;
+      const terminalWidth = process.stdout.columns ?? 80;
       const dividerWidth = Math.min(60, terminalWidth - 2);
       const divider = '━'.repeat(dividerWidth);
 

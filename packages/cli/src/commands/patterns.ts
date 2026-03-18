@@ -35,7 +35,7 @@ export async function patternsAction(
   console.log(chalk.blue('🔍 Analyzing patterns...\n'));
 
   const startTime = Date.now();
-  const resolvedDir = resolvePath(process.cwd(), directory || '.');
+  const resolvedDir = resolvePath(process.cwd(), directory ?? '.');
 
   try {
     // Determine if smart defaults should be used
@@ -100,8 +100,8 @@ export async function patternsAction(
     }
 
     const outputFormat =
-      options.output || finalOptions.output?.format || 'console';
-    const userOutputFile = options.outputFile || finalOptions.output?.file;
+      options.output ?? finalOptions.output?.format ?? 'console';
+    const userOutputFile = options.outputFile ?? finalOptions.output?.file;
 
     if (outputFormat === 'json') {
       const outputData = {

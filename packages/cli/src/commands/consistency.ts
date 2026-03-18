@@ -34,7 +34,7 @@ export async function consistencyAction(
   console.log(chalk.blue('🔍 Analyzing consistency...\n'));
 
   const startTime = Date.now();
-  const resolvedDir = resolvePath(process.cwd(), directory || '.');
+  const resolvedDir = resolvePath(process.cwd(), directory ?? '.');
 
   try {
     // Define defaults
@@ -69,7 +69,7 @@ export async function consistencyAction(
     // Calculate score if requested
     let consistencyScore: ToolScoringOutput | undefined;
     if (options.score) {
-      const issues = report.results?.flatMap((r: any) => r.issues) || [];
+      const issues = report.results?.flatMap((r: any) => r.issues) ?? [];
       consistencyScore = calculateConsistencyScore(
         issues,
         report.summary.filesAnalyzed
@@ -77,8 +77,8 @@ export async function consistencyAction(
     }
 
     const outputFormat =
-      options.output || finalOptions.output?.format || 'console';
-    const userOutputFile = options.outputFile || finalOptions.output?.file;
+      options.output ?? finalOptions.output?.format ?? 'console';
+    const userOutputFile = options.outputFile ?? finalOptions.output?.file;
 
     if (outputFormat === 'json') {
       const outputData = {
@@ -121,7 +121,7 @@ export async function consistencyAction(
       console.log(`  Naming: ${chalk.yellow(report.summary.namingIssues)}`);
       console.log(`  Patterns: ${chalk.yellow(report.summary.patternIssues)}`);
       console.log(
-        `  Architecture: ${chalk.yellow(report.summary.architectureIssues || 0)}`
+        `  Architecture: ${chalk.yellow(report.summary.architectureIssues ?? 0)}`
       );
       console.log(`Analysis Time: ${chalk.gray(elapsedTime + 's')}\n`);
 

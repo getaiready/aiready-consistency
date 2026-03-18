@@ -11,7 +11,7 @@ export async function bugAction(message: string | undefined, options: any) {
 
   if (message) {
     // Agent-assisted pre-filled issue
-    const type = options.type || 'bug';
+    const type = options.type ?? 'bug';
     const title = `[${type.toUpperCase()}] ${message}`;
     const label =
       type === 'bug' ? 'bug' : type === 'feature' ? 'enhancement' : 'metric';

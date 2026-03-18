@@ -30,7 +30,7 @@ export async function visualizeAction(
   options: VisualizeOptions
 ) {
   try {
-    const dirPath = resolvePath(process.cwd(), directory || '.');
+    const dirPath = resolvePath(process.cwd(), directory ?? '.');
     let reportPath = options.report
       ? resolvePath(dirPath, options.report)
       : null;
@@ -87,7 +87,7 @@ export async function visualizeAction(
     const graph = GraphBuilder.buildFromReport(report, dirPath);
 
     // Check if --dev mode is requested and available
-    let useDevMode = options.dev || false;
+    let useDevMode = options.dev ?? false;
     let devServerStarted = false;
 
     if (useDevMode) {
@@ -230,7 +230,7 @@ export async function visualizeAction(
     console.log('Generating HTML...');
     const html = generateHTML(graph as any);
     const defaultOutput = 'visualization.html';
-    const outPath = resolvePath(dirPath, options.output || defaultOutput);
+    const outPath = resolvePath(dirPath, options.output ?? defaultOutput);
     writeFileSync(outPath, html, 'utf8');
     console.log(chalk.green(`✅ Visualization written to: ${outPath}`));
 
@@ -250,7 +250,7 @@ export async function visualizeAction(
 
           const server = http.createServer(async (req, res) => {
             try {
-              const urlPath = req.url || '/';
+              const urlPath = req.url ?? '/';
               if (urlPath === '/' || urlPath === '/index.html') {
                 const content = await fsp.readFile(outPath, 'utf8');
                 res.writeHead(200, {

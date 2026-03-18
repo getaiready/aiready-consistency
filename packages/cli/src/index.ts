@@ -192,7 +192,7 @@ export async function analyzeUnified(
     // Dynamic Loading: If provider not found, attempt to import the package
     if (!provider) {
       const packageName =
-        TOOL_PACKAGE_MAP[toolName] ||
+        TOOL_PACKAGE_MAP[toolName] ??
         (toolName.startsWith('@aiready/') ? toolName : `@aiready/${toolName}`);
       try {
         await import(packageName);
