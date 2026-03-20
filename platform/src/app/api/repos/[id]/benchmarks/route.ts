@@ -1,33 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
 import { getIndustryBenchmarks } from '@/lib/db/benchmarks';
+import { withRepoAuth } from '@/lib/api/repo-route';
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  return withRepoAuth(req, params, async ({ repo }) => {
+    try {
+      const benchmarks = await getIndustryBenchmarks(repo.id);
 
-    const { id } = await params;
-    const benchmarks = await getIndustryBenchmarks(id);
+      if (!benchmarks) {
+        return NextResponse.json(
+          { error: 'Benchmark data unavailable' },
+          { status: 404 }
+        );
+      }
 
-    if (!benchmarks) {
+      return { benchmarks };
+    } catch (error) {
+      console.error('[BenchmarksAPI] Error:', error);
       return NextResponse.json(
-        { error: 'Benchmark data unavailable' },
-        { status: 404 }
+        { error: 'Internal Server Error' },
+        { status: 500 }
       );
     }
-
-    return NextResponse.json({ benchmarks });
-  } catch (error) {
-    console.error('[BenchmarksAPI] Error:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
+  });
 }

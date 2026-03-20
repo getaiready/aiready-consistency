@@ -16,6 +16,8 @@ import {
   PK,
   SK,
   GSI,
+  buildUpdateExpression,
+  updateItem,
 } from './helpers';
 import type { Team, TeamMember, User } from './types';
 import { updateUser, getUser } from './users';
@@ -145,29 +147,13 @@ export async function updateTeam(
   teamId: string,
   updates: Partial<Team>
 ): Promise<void> {
-  const updateExpressions: string[] = [];
-  const expressionAttributeNames: Record<string, string> = {};
-  const expressionAttributeValues: Record<string, unknown> = {};
+  const expr = buildUpdateExpression(updates as Record<string, unknown>);
+  if (!expr) return;
 
-  for (const [key, value] of Object.entries(updates)) {
-    if (key === 'id') continue;
-    updateExpressions.push(`#${key} = :${key}`);
-    expressionAttributeNames[`#${key}`] = key;
-    expressionAttributeValues[`:${key}`] = value;
-  }
-
-  if (updateExpressions.length === 0) return;
-  updateExpressions.push('#updatedAt = :updatedAt');
-  expressionAttributeNames['#updatedAt'] = 'updatedAt';
-  expressionAttributeValues[':updatedAt'] = new Date().toISOString();
-
-  await doc.send(
-    new UpdateCommand({
-      TableName: TABLE_NAME,
-      Key: { PK: `TEAM#${teamId}`, SK: '#METADATA' },
-      UpdateExpression: `SET ${updateExpressions.join(', ')}`,
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues,
-    })
+  await updateItem(
+    { PK: `TEAM#${teamId}`, SK: SK.metadata },
+    expr.expression,
+    expr.values,
+    expr.names
   );
 }

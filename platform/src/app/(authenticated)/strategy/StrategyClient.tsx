@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import PlatformShell from '@/components/PlatformShell';
 import { ScanConfigForm } from '../dashboard/repo/[id]/settings/ScanConfigForm';
+import { updateScanStrategy } from '@/lib/scan-strategy';
 import { SettingsIcon } from '@/components/Icons';
 import { Team, TeamMember } from '@/lib/db';
 
@@ -23,23 +24,7 @@ export default function StrategyClient({ user, teams, overallScore }: Props) {
   const router = useRouter();
 
   async function handleUpdateScanStrategy(settings: any | null) {
-    try {
-      const res = await fetch('/api/user/settings', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scanConfig: settings }),
-      });
-      if (res.ok) {
-        toast.success('Default scan strategy updated');
-        router.refresh();
-      } else {
-        throw new Error('Failed to update strategy');
-      }
-    } catch (err) {
-      console.error('Failed to update scan strategy:', err);
-      toast.error('Failed to save strategy');
-      throw err;
-    }
+    return updateScanStrategy(settings, () => router.refresh());
   }
 
   return (

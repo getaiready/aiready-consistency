@@ -92,33 +92,34 @@ export async function batchPutItems(
     })
   );
 }
-
 // Helper to build update expression from partial object
-export function buildUpdateExpression(updates: Record<string, unknown>): {
+export type UpdateExpressionParts = {
   expression: string;
-  names: Record<string, string>;
-  values: Record<string, unknown>;
-} | null {
-  const updateExpressions: string[] = [];
-  const expressionAttributeNames: Record<string, string> = {};
-  const expressionAttributeValues: Record<string, unknown> = {};
+  values?: Record<string, unknown>;
+  names?: Record<string, string>;
+};
 
+export function buildUpdateExpression(
+  updates: Record<string, unknown> | undefined
+): UpdateExpressionParts | null {
+  if (!updates || Object.keys(updates).length === 0) return null;
+  const setExpressions: string[] = [];
+  const values: Record<string, unknown> = {};
+  const names: Record<string, string> = {};
+  let idx = 0;
   for (const [key, value] of Object.entries(updates)) {
     if (key === 'id') continue;
-    updateExpressions.push(`#${key} = :${key}`);
-    expressionAttributeNames[`#${key}`] = key;
-    expressionAttributeValues[`:${key}`] = value;
+    const valKey = `:v${idx}`;
+    const nameKey = `#n${idx}`;
+    setExpressions.push(`${nameKey} = ${valKey}`);
+    values[valKey] = value;
+    names[nameKey] = key;
+    idx++;
   }
+  // always update updatedAt
+  setExpressions.push('#updatedAt = :updatedAt');
+  names['#updatedAt'] = 'updatedAt';
+  values[':updatedAt'] = new Date().toISOString();
 
-  if (updateExpressions.length === 0) return null;
-
-  updateExpressions.push('#updatedAt = :updatedAt');
-  expressionAttributeNames['#updatedAt'] = 'updatedAt';
-  expressionAttributeValues[':updatedAt'] = new Date().toISOString();
-
-  return {
-    expression: `SET ${updateExpressions.join(', ')}`,
-    names: expressionAttributeNames,
-    values: expressionAttributeValues,
-  };
+  return { expression: `SET ${setExpressions.join(', ')}`, values, names };
 }

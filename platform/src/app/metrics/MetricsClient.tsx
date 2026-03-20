@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import type { ClientProps as Props } from '@/lib/client-props';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Script from 'next/script';
@@ -10,17 +11,6 @@ import { Team, TeamMember } from '@/lib/db';
 import { LANDING_BASE_URL, PLATFORM_BASE_URL } from '@/lib/seo-schema';
 import { metrics } from './constants';
 import { MetricCard } from './components/MetricCard';
-
-interface Props {
-  user?: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  } | null;
-  teams?: (TeamMember & { team: Team })[];
-  overallScore?: number | null;
-}
 
 export default function MetricsClient({
   user,

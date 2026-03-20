@@ -14,6 +14,8 @@ import {
   PK,
   SK,
   GSI,
+  buildUpdateExpression,
+  updateItem,
 } from './helpers';
 import type { ApiKey, MagicLinkToken } from './types';
 
@@ -90,13 +92,12 @@ export async function getMagicLinkToken(
 }
 
 export async function markMagicLinkUsed(token: string): Promise<void> {
-  const { UpdateCommand } = await import('@aws-sdk/lib-dynamodb');
-  await doc.send(
-    new UpdateCommand({
-      TableName: TABLE_NAME,
-      Key: { PK: PK.magic(token), SK: SK.metadata },
-      UpdateExpression: 'SET used = :used',
-      ExpressionAttributeValues: { ':used': true },
-    })
+  const expr = buildUpdateExpression({ used: true });
+  if (!expr) return;
+  await updateItem(
+    { PK: PK.magic(token), SK: SK.metadata },
+    expr.expression,
+    expr.values,
+    expr.names
   );
 }

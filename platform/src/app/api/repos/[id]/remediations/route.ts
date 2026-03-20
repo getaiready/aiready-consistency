@@ -1,25 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
 import { listRemediations } from '@/lib/db/remediation';
+import { withRepoAuth } from '@/lib/api/repo-route';
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  return withRepoAuth(req, params, async ({ repo }) => {
+    try {
+      const remediations = await listRemediations(repo.id);
+      return { remediations };
+    } catch (error) {
+      console.error('[RemediationsAPI] Error:', error);
+      return NextResponse.json(
+        { error: 'Internal Server Error' },
+        { status: 500 }
+      );
     }
-
-    const { id } = await params;
-    const remediations = await listRemediations(id);
-    return NextResponse.json({ remediations });
-  } catch (error) {
-    console.error('[RemediationsAPI] Error:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
+  });
 }

@@ -1,6 +1,13 @@
 import { PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { doc, TABLE_NAME } from './client';
-import { putItem, queryItems, PK, SK } from './helpers';
+import {
+  putItem,
+  queryItems,
+  PK,
+  SK,
+  buildUpdateExpression,
+  updateItem,
+} from './helpers';
 import type { RemediationRequest } from './types';
 
 /**
@@ -88,35 +95,22 @@ export async function updateRemediation(
   id: string,
   updates: Partial<RemediationRequest>
 ): Promise<void> {
-  const { UpdateCommand } = await import('@aws-sdk/lib-dynamodb');
-  const setExpressions: string[] = [];
-  const values: Record<string, unknown> = {};
-  const names: Record<string, string> = {};
-
-  let idx = 0;
-  for (const [key, value] of Object.entries(updates)) {
-    if (key === 'id' || key === 'repoId') continue;
-    const valKey = `:v${idx}`;
-    const nameKey = `#n${idx}`;
-    setExpressions.push(`${nameKey} = ${valKey}`);
-    values[valKey] = value;
-    names[nameKey] = key;
-    idx++;
-  }
-
-  if (setExpressions.length === 0) return;
-
-  // Get the remediation to find PK/SK
   const remediation = await getRemediation(id);
   if (!remediation) return;
 
-  await doc.send(
-    new UpdateCommand({
-      TableName: TABLE_NAME,
-      Key: { PK: PK.repo(remediation.repoId), SK: SK.remediation(id) },
-      UpdateExpression: `SET ${setExpressions.join(', ')}`,
-      ExpressionAttributeValues: values,
-      ExpressionAttributeNames: names,
-    })
+  const filtered: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(updates || {})) {
+    if (k === 'id' || k === 'repoId') continue;
+    filtered[k] = v;
+  }
+
+  const expr = buildUpdateExpression(filtered);
+  if (!expr) return;
+
+  await updateItem(
+    { PK: PK.repo(remediation.repoId), SK: SK.remediation(id) },
+    expr.expression,
+    expr.values,
+    expr.names
   );
 }

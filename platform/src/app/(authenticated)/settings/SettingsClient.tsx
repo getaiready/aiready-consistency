@@ -13,6 +13,7 @@ import ConfirmationModal from '@/components/ConfirmationModal';
 
 import type { AIReadyConfig } from '@aiready/core';
 import { ScanConfigForm } from '../dashboard/repo/[id]/settings/ScanConfigForm';
+import { updateScanStrategy } from '@/lib/scan-strategy';
 
 interface Props {
   user: {
@@ -101,23 +102,7 @@ export default function SettingsClient({ user, teams, overallScore }: Props) {
   }
 
   async function handleUpdateScanStrategy(settings: AIReadyConfig | null) {
-    try {
-      const res = await fetch('/api/user/settings', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scanConfig: settings }),
-      });
-      if (res.ok) {
-        toast.success('Default scan strategy updated');
-        router.refresh();
-      } else {
-        throw new Error('Failed to update strategy');
-      }
-    } catch (err) {
-      console.error('Failed to update scan strategy:', err);
-      toast.error('Failed to save strategy');
-      throw err;
-    }
+    return updateScanStrategy(settings, () => router.refresh());
   }
 
   return (

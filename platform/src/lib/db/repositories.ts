@@ -6,7 +6,16 @@ import {
   DeleteCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { doc, TABLE_NAME } from './client';
-import { putItem, getItem, queryItems, deleteItem, PK, SK } from './helpers';
+import {
+  putItem,
+  getItem,
+  queryItems,
+  deleteItem,
+  PK,
+  SK,
+  updateItem,
+  buildUpdateExpression,
+} from './helpers';
 import type { Repository } from './types';
 
 export async function createRepository(repo: Repository): Promise<Repository> {
@@ -67,33 +76,32 @@ export async function updateRepositoryScore(
   score: number,
   lastCommitHash?: string
 ): Promise<void> {
-  await doc.send(
-    new UpdateCommand({
-      TableName: TABLE_NAME,
-      Key: { PK: PK.repo(repoId), SK: SK.metadata },
-      UpdateExpression:
-        'SET aiScore = :s, lastAnalysisAt = :t, updatedAt = :t, isScanning = :f, lastCommitHash = :h',
-      ExpressionAttributeValues: {
-        ':s': score,
-        ':t': new Date().toISOString(),
-        ':f': false,
-        ':h': lastCommitHash || null,
-      },
-    })
+  const updates = {
+    aiScore: score,
+    lastAnalysisAt: new Date().toISOString(),
+    isScanning: false,
+    lastCommitHash: lastCommitHash || null,
+  } as Record<string, unknown>;
+
+  const expr = buildUpdateExpression(updates);
+  if (!expr) return;
+
+  await updateItem(
+    { PK: PK.repo(repoId), SK: SK.metadata },
+    expr.expression,
+    expr.values,
+    expr.names
   );
 }
 
 export async function setRepositoryScanning(repoId: string): Promise<void> {
-  await doc.send(
-    new UpdateCommand({
-      TableName: TABLE_NAME,
-      Key: { PK: PK.repo(repoId), SK: SK.metadata },
-      UpdateExpression: 'SET isScanning = :scanning, updatedAt = :t',
-      ExpressionAttributeValues: {
-        ':scanning': true,
-        ':t': new Date().toISOString(),
-      },
-    })
+  const expr = buildUpdateExpression({ isScanning: true });
+  if (!expr) return;
+  await updateItem(
+    { PK: PK.repo(repoId), SK: SK.metadata },
+    expr.expression,
+    expr.values,
+    expr.names
   );
 }
 
@@ -101,29 +109,19 @@ export async function updateRepositoryConfig(
   repoId: string,
   config: Record<string, unknown>
 ): Promise<void> {
-  const setExpressions: string[] = [];
-  const values: Record<string, unknown> = {};
-  const names: Record<string, string> = {};
-
-  let idx = 0;
-  for (const [key, value] of Object.entries(config)) {
-    const valKey = `:v${idx}`;
-    const nameKey = `#n${idx}`;
-    setExpressions.push(`${nameKey} = ${valKey}`);
-    values[valKey] = value;
-    names[nameKey] = key;
-    idx++;
+  const filtered: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(config || {})) {
+    if (k === 'id') continue;
+    filtered[k] = v;
   }
 
-  if (setExpressions.length === 0) return;
+  const expr = buildUpdateExpression(filtered);
+  if (!expr) return;
 
-  await doc.send(
-    new UpdateCommand({
-      TableName: TABLE_NAME,
-      Key: { PK: PK.repo(repoId), SK: SK.metadata },
-      UpdateExpression: `SET ${setExpressions.join(', ')}, updatedAt = :t`,
-      ExpressionAttributeValues: { ...values, ':t': new Date().toISOString() },
-      ExpressionAttributeNames: names,
-    })
+  await updateItem(
+    { PK: PK.repo(repoId), SK: SK.metadata },
+    expr.expression,
+    expr.values,
+    expr.names
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import type { ClientProps as Props } from '@/lib/client-props';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { TrendingUpIcon } from '@/components/Icons';
@@ -9,17 +10,6 @@ import { Team, TeamMember } from '@/lib/db';
 import WaitingListModal from '@/components/WaitingListModal';
 import { plans } from './constants';
 import { PricingCard } from './components/PricingCard';
-
-interface Props {
-  user?: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  } | null;
-  teams?: (TeamMember & { team: Team })[];
-  overallScore?: number | null;
-}
 
 export default function PricingClient({
   user,
