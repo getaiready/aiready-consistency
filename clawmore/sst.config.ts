@@ -18,17 +18,17 @@ export default $config({
       removal: input?.stage === 'production' ? 'retain' : 'remove',
       home: 'aws',
       providers: {
-        stripe: '0.0.10',
+        stripe: true,
       },
     } as any;
   },
   async run() {
     const isProd = $app.stage === 'production';
 
-    // Configure the Stripe provider
-    ($config as any).providers.stripe = {
+    // Configure the Stripe provider explicitly
+    const stripeProvider = new (stripe as any).Provider('StripeProvider', {
       apiKey: process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder',
-    };
+    });
 
     const domainName = isProd
       ? 'clawmore.getaiready.dev'
@@ -37,38 +37,59 @@ export default $config({
     // --- Stripe Products & Prices (IaC) ---
 
     // 1. Managed Platform Subscription ($29/mo)
-    const platformProduct = new (stripe as any).Product('PlatformProduct', {
-      name: 'ClawMore Managed Platform',
-      description:
-        'Fully managed serverless AWS infrastructure with AI evolution.',
-    });
+    const platformProduct = new (stripe as any).Product(
+      'PlatformProduct',
+      {
+        name: 'ClawMore Managed Platform',
+        description:
+          'Fully managed serverless AWS infrastructure with AI evolution.',
+      },
+      { provider: stripeProvider }
+    );
 
-    const platformPrice = new (stripe as any).Price('PlatformPrice', {
-      product: platformProduct.id,
-      unitAmount: 2900,
-      currency: 'usd',
-      recurring: { interval: 'month' },
-    });
+    const platformPrice = new (stripe as any).Price(
+      'PlatformPrice',
+      {
+        product: platformProduct.id,
+        unitAmount: 2900,
+        currency: 'usd',
+        recurring: { interval: 'month', intervalCount: 1 },
+      },
+      { provider: stripeProvider }
+    );
 
     // 2. AI Fuel Pack ($10.00 one-time)
-    const fuelPackProduct = new (stripe as any).Product('FuelPackProduct', {
-      name: 'AI Fuel Pack',
-      description: 'Pre-paid intelligence credits for agent mutations.',
-    });
+    const fuelPackProduct = new (stripe as any).Product(
+      'FuelPackProduct',
+      {
+        name: 'AI Fuel Pack',
+        description: 'Pre-paid intelligence credits for agent mutations.',
+      },
+      { provider: stripeProvider }
+    );
 
-    const fuelPackPrice = new (stripe as any).Price('FuelPackPrice', {
-      product: fuelPackProduct.id,
-      unitAmount: 1000,
-      currency: 'usd',
-    });
+    const fuelPackPrice = new (stripe as any).Price(
+      'FuelPackPrice',
+      {
+        product: fuelPackProduct.id,
+        unitAmount: 1000,
+        currency: 'usd',
+      },
+      { provider: stripeProvider }
+    );
 
     // Storage for ClawMore Managed Platform data
     const table = new sst.aws.Dynamo('ClawMoreTable', {
       fields: {
         PK: 'string',
         SK: 'string',
+        GSI1PK: 'string',
+        GSI1SK: 'string',
       },
       primaryIndex: { hashKey: 'PK', rangeKey: 'SK' },
+      globalIndexes: {
+        GSI1: { hashKey: 'GSI1PK', rangeKey: 'GSI1SK' },
+      },
     });
 
     // EventBridge Bus for managed events (e.g. mutations)

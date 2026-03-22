@@ -1,5 +1,7 @@
 import meta from './mcp-superpowers-custom-tools.meta';
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight, Zap } from 'lucide-react';
 
 const Post = () => (
   <>
@@ -20,11 +22,17 @@ const Post = () => (
     </div>
 
     <p>
-      In <a href="/blog/mcp-superpowers-context-aware">Part 1</a>, we saw how
-      the Model Context Protocol (MCP) gives agents &quot;self-awareness&quot;
-      of the codebase. But what if your agent needs more than just code? What if
-      it needs to check your production logs, query your customer database, or
-      understand your proprietary business rules?
+      In{' '}
+      <Link
+        href="/blog/mcp-superpowers-context-aware"
+        className="text-blue-600 hover:underline"
+      >
+        Part 1
+      </Link>
+      , we saw how the Model Context Protocol (MCP) gives agents
+      &quot;self-awareness&quot; of the codebase. But what if your agent needs
+      more than just code? What if it needs to check your production logs, query
+      your customer database, or understand your proprietary business rules?
     </p>
 
     <p>
@@ -136,6 +144,22 @@ server.addTool({
       Check out the <code>@aiready/skills</code> package for a library of
       pre-built agentic capabilities.
     </p>
+
+    <div className="mt-12 p-8 bg-blue-50 dark:bg-zinc-900 border border-blue-100 dark:border-zinc-800 rounded-3xl">
+      <div className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-2">
+        Up Next
+      </div>
+      <h3 className="text-2xl font-black mb-4">
+        The Orchestration Loop: Coordinating Swarms of Specialists
+      </h3>
+      <Link
+        href="/blog/mcp-superpowers-orchestration-loop"
+        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:underline"
+      >
+        Read Part 3
+        <ChevronRight className="w-4 h-4" />
+      </Link>
+    </div>
   </>
 );
 

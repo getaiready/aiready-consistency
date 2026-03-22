@@ -1,5 +1,7 @@
 import meta from './10-minute-ai-audit.meta';
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight, BarChart3, Shield } from 'lucide-react';
 
 const Post = () => (
   <>
@@ -86,15 +88,45 @@ const Post = () => (
 
     <hr className="my-12 border-slate-200 dark:border-zinc-800" />
 
-    <p>
-      <strong>Want to dive deeper?</strong>
-      <br />
-      Read our series on <a href="/blog/the-agentic-wall">
-        The Agentic Wall
-      </a>{' '}
-      or learn about the{' '}
-      <a href="/blog/agentic-roi-navigation-tax">Economics of AI-Readiness</a>.
-    </p>
+    <div className="mt-16 pt-12 border-t border-slate-200 dark:border-zinc-800">
+      <h3 className="text-xl font-black mb-8">Want to dive deeper?</h3>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <Link
+          href="/blog/the-agentic-wall"
+          className="p-8 bg-blue-50 dark:bg-zinc-900 border border-blue-100 dark:border-zinc-800 rounded-3xl hover:border-blue-300 dark:hover:border-zinc-700 transition-all group"
+        >
+          <div className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <Shield className="w-4 h-4" />
+            Core Strategy
+          </div>
+          <h4 className="text-xl font-black mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            The Agentic Wall: Breaking Through Complexity
+          </h4>
+          <div className="inline-flex items-center gap-2 text-sm text-slate-500 font-bold group-hover:translate-x-1 transition-transform">
+            Read the 12-part series
+            <ChevronRight className="w-4 h-4" />
+          </div>
+        </Link>
+
+        <Link
+          href="/blog/agentic-roi-navigation-tax"
+          className="p-8 bg-indigo-50 dark:bg-zinc-900 border border-indigo-100 dark:border-zinc-800 rounded-3xl hover:border-indigo-300 dark:hover:border-zinc-700 transition-all group"
+        >
+          <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <BarChart3 className="w-4 h-4" />
+            Business Value
+          </div>
+          <h4 className="text-xl font-black mb-4 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            The Agentic ROI: Quantifying AI-Readiness Impact
+          </h4>
+          <div className="inline-flex items-center gap-2 text-sm text-slate-500 font-bold group-hover:translate-x-1 transition-transform">
+            Start the ROI series
+            <ChevronRight className="w-4 h-4" />
+          </div>
+        </Link>
+      </div>
+    </div>
   </>
 );
 

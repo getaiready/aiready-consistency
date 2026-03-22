@@ -18,59 +18,83 @@ export default $config({
       removal: input?.stage === 'production' ? 'retain' : 'remove',
       home: 'aws',
       providers: {
-        stripe: '0.0.10',
+        stripe: true,
       },
     };
   },
   async run() {
-    // Configure the Stripe provider
-    $config.providers.stripe = {
+    // Configure the Stripe provider explicitly
+    const stripeProvider = new (stripe as any).Provider('StripeProvider', {
       apiKey: process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder',
-    };
+    });
 
     // --- Stripe Products & Prices (IaC) ---
 
     // 1. Pro Plan ($49/mo)
-    const proProduct = new stripe.Product('ProProduct', {
-      name: 'AIReady Pro',
-      description:
-        'Advanced AI-readiness metrics and historical trends for individual developers.',
-    });
+    const proProduct = new (stripe as any).Product(
+      'ProProduct',
+      {
+        name: 'AIReady Pro',
+        description:
+          'Advanced AI-readiness metrics and historical trends for individual developers.',
+      },
+      { provider: stripeProvider }
+    );
 
-    const proPrice = new stripe.Price('ProPrice', {
-      product: proProduct.id,
-      unitAmount: 4900,
-      currency: 'usd',
-      recurring: { interval: 'month' },
-    });
+    const proPrice = new (stripe as any).Price(
+      'ProPrice',
+      {
+        product: proProduct.id,
+        unitAmount: 4900,
+        currency: 'usd',
+        recurring: { interval: 'month', intervalCount: 1 },
+      },
+      { provider: stripeProvider }
+    );
 
     // 2. Team Plan ($99/mo)
-    const teamProduct = new stripe.Product('TeamProduct', {
-      name: 'AIReady Team',
-      description:
-        'CI/CD integration, team benchmarking, and priority support.',
-    });
+    const teamProduct = new (stripe as any).Product(
+      'TeamProduct',
+      {
+        name: 'AIReady Team',
+        description:
+          'CI/CD integration, team benchmarking, and priority support.',
+      },
+      { provider: stripeProvider }
+    );
 
-    const teamPrice = new stripe.Price('TeamPrice', {
-      product: teamProduct.id,
-      unitAmount: 9900,
-      currency: 'usd',
-      recurring: { interval: 'month' },
-    });
+    const teamPrice = new (stripe as any).Price(
+      'TeamPrice',
+      {
+        product: teamProduct.id,
+        unitAmount: 9900,
+        currency: 'usd',
+        recurring: { interval: 'month', intervalCount: 1 },
+      },
+      { provider: stripeProvider }
+    );
 
     // 3. Enterprise Plan ($299/mo)
-    const enterpriseProduct = new stripe.Product('EnterpriseProduct', {
-      name: 'AIReady Enterprise',
-      description:
-        'Custom rules, SSO, and dedicated support for large organizations.',
-    });
+    const enterpriseProduct = new (stripe as any).Product(
+      'EnterpriseProduct',
+      {
+        name: 'AIReady Enterprise',
+        description:
+          'Custom rules, SSO, and dedicated support for large organizations.',
+      },
+      { provider: stripeProvider }
+    );
 
-    const enterprisePrice = new stripe.Price('EnterprisePrice', {
-      product: enterpriseProduct.id,
-      unitAmount: 29900,
-      currency: 'usd',
-      recurring: { interval: 'month' },
-    });
+    const enterprisePrice = new (stripe as any).Price(
+      'EnterprisePrice',
+      {
+        product: enterpriseProduct.id,
+        unitAmount: 29900,
+        currency: 'usd',
+        recurring: { interval: 'month', intervalCount: 1 },
+      },
+      { provider: stripeProvider }
+    );
 
     // S3 Bucket for analysis data
     const bucket = new sst.aws.Bucket('AnalysisBucket');

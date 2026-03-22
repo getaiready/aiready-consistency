@@ -13,8 +13,12 @@ import {
   ArrowLeft,
   Menu,
   X,
+  User,
+  LogOut,
+  ShieldCheck,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import LocaleSwitcher from './LocaleSwitcher';
 
 interface NavbarProps {
@@ -26,6 +30,7 @@ export default function Navbar({ variant = 'home', dict }: NavbarProps) {
   const pathname = usePathname();
   const isBlog = pathname?.startsWith('/blog');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -103,12 +108,6 @@ export default function Navbar({ variant = 'home', dict }: NavbarProps) {
               >
                 <Activity className="w-3 h-3" /> {dict?.navbar?.blog || 'Blog'}
               </Link>
-              <Link
-                href="/login"
-                className="hover:text-cyber-blue hover:glow-blue transition-colors flex items-center gap-1.5 border border-cyber-blue/30 px-3 py-1 rounded-sm bg-cyber-blue/5"
-              >
-                <Zap className="w-3 h-3" /> {dict?.navbar?.signin || 'Sign In (Beta)'}
-              </Link>
             </div>
           ) : (
             <Link
@@ -150,19 +149,48 @@ export default function Navbar({ variant = 'home', dict }: NavbarProps) {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            className="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-sm border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-            aria-expanded={isMobileMenuOpen}
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-4 h-4" />
+          <div className="flex items-center gap-2">
+            {session ? (
+              <div className="flex items-center gap-2">
+                {(session.user as any)?.isAdmin && (
+                  <Link
+                    href="/admin/users"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/20 transition-all text-[10px] font-bold uppercase tracking-wider"
+                  >
+                    <ShieldCheck className="w-3 h-3" /> Portal
+                  </Link>
+                )}
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all text-[10px] font-bold uppercase tracking-wider"
+                >
+                  <LogOut className="w-3 h-3" />{' '}
+                  {dict?.navbar?.signOut || 'Sign Out'}
+                </button>
+              </div>
             ) : (
-              <Menu className="w-4 h-4" />
+              <button
+                onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded bg-cyber-blue/10 hover:bg-cyber-blue/20 text-cyber-blue border border-cyber-blue/20 transition-all text-[10px] font-bold uppercase tracking-wider"
+              >
+                <User className="w-3 h-3" /> {dict?.navbar?.signIn || 'Sign In'}
+              </button>
             )}
-          </button>
+
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              className="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-sm border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+              aria-expanded={isMobileMenuOpen}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-4 h-4" />
+              ) : (
+                <Menu className="w-4 h-4" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -226,16 +254,41 @@ export default function Navbar({ variant = 'home', dict }: NavbarProps) {
                 </Link>
               )}
 
-              <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between gap-3">
-                <LocaleSwitcher />
-                <Link
-                  href="https://github.com/caopengau/serverlessclaw"
-                  onClick={closeMobileMenu}
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-sm border border-white/15 bg-white/5 text-zinc-100 hover:bg-white/10 transition-colors"
-                >
-                  <Code className="w-3.5 h-3.5" />{' '}
-                  {dict?.navbar?.source || 'Source'}
-                </Link>
+              <div className="mt-3 pt-3 border-t border-white/10 flex flex-col gap-3">
+                <div className="flex items-center justify-between gap-3">
+                  <LocaleSwitcher />
+                  <Link
+                    href="https://github.com/caopengau/serverlessclaw"
+                    onClick={closeMobileMenu}
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-sm border border-white/15 bg-white/5 text-zinc-100 hover:bg-white/10 transition-colors"
+                  >
+                    <Code className="w-3.5 h-3.5" />{' '}
+                    {dict?.navbar?.source || 'Source'}
+                  </Link>
+                </div>
+                {session ? (
+                  <button
+                    onClick={() => {
+                      closeMobileMenu();
+                      signOut({ callbackUrl: '/' });
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-3 py-3 rounded-sm border border-red-500/20 bg-red-500/5 text-red-400 hover:bg-red-500/10 transition-colors font-bold uppercase text-[10px] tracking-widest"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />{' '}
+                    {dict?.navbar?.signOut || 'Sign Out'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      closeMobileMenu();
+                      signIn(undefined, { callbackUrl: '/dashboard' });
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-3 py-3 rounded-sm border border-cyber-blue/20 bg-cyber-blue/5 text-cyber-blue hover:bg-cyber-blue/10 transition-colors font-bold uppercase text-[10px] tracking-widest"
+                  >
+                    <User className="w-3.5 h-3.5" />{' '}
+                    {dict?.navbar?.signIn || 'Sign In'}
+                  </button>
+                )}
               </div>
             </div>
           </motion.div>

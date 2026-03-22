@@ -1,5 +1,7 @@
 import meta from './living-repository.meta';
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight, Cpu } from 'lucide-react';
 
 const Post = () => (
   <>
@@ -82,92 +84,92 @@ const Post = () => (
     </p>
     <ul className="list-disc pl-6 mb-4 space-y-2 text-sm">
       <li>
-        <a
+        <Link
           href="/blog/the-agentic-wall"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 1: The Agentic Wall (Context Fragmentation)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/beyond-the-sidekick"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 2: Beyond the Sidekick (Rise of the Agentic System)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/the-economic-moat"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 3: The Economic Moat (Quantifying AI ROI)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/the-neural-spine"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 4: The Neural Spine (Event-Driven Orchestration)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/closing-the-loop"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 5: Closing the Loop (Git as a Runtime)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/cognitive-tiering"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 6: Cognitive Tiering (Multi-Headed Brain)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/resilience-fortress"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 7: The Resilience Fortress (Death of the Transient Agent)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/observability-intelligence"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 8: Observability as Intelligence (Self-Critique)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/human-agent-co-management"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 9: Human-Agent Co-Management (New Engineering Culture)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/recursive-safety"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 10: Recursive Safety (VPCs and Guards)
-        </a>
+        </Link>
       </li>
       <li>
-        <a
+        <Link
           href="/blog/roadmap-to-autonomy"
           className="text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           Part 11: Roadmap to Autonomy ($1/Month Agent)
-        </a>
+        </Link>
       </li>
       <li>
         <strong>
@@ -177,20 +179,25 @@ const Post = () => (
       </li>
     </ul>
 
-    <div className="mt-12 p-8 bg-indigo-900 rounded-3xl text-center">
-      <h3 className="text-white text-2xl font-bold mb-4">
-        Start Your Shift Today
+    <div className="mt-12 p-8 bg-blue-50 dark:bg-zinc-900 border border-blue-100 dark:border-zinc-800 rounded-3xl group">
+      <div className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+        <Cpu className="w-4 h-4" />
+        New Series
+      </div>
+      <h3 className="text-2xl font-black mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        MCP Superpowers: Leveraging the Model Context Protocol
       </h3>
-      <p className="text-indigo-100 mb-6">
-        Learn how AIReady can help you assess and improve your repository&apos;s
-        agentic readiness.
+      <p className="text-slate-600 dark:text-zinc-400 mb-6">
+        Ready to give your agents deep repository awareness? Explore how the
+        Modelt Context Protocol is changing the agentic landscape.
       </p>
-      <a
-        href="/"
-        className="inline-block bg-white text-indigo-900 px-8 py-3 rounded-full font-bold hover:bg-indigo-50 transition-colors"
+      <Link
+        href="/blog/mcp-superpowers-context-aware"
+        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:underline"
       >
-        Explore AIReady
-      </a>
+        Start the MCP Series
+        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+      </Link>
     </div>
   </>
 );

@@ -1,5 +1,7 @@
 import meta from './agentic-roi-token-roi.meta';
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 
 const Post = () => (
   <>
@@ -16,9 +18,16 @@ const Post = () => (
     </div>
 
     <p>
-      In <a href="/blog/agentic-roi-navigation-tax">Part 1</a>, we defined the
-      Navigation Tax—the hidden cost of agents getting lost in your code. Today,
-      we look at the positive side: <strong>Token ROI</strong>.
+      In{' '}
+      <Link
+        href="/blog/agentic-roi-navigation-tax"
+        className="text-blue-600 hover:underline"
+      >
+        Part 1
+      </Link>
+      , we defined the Navigation Tax—the hidden cost of agents getting lost in
+      your code. Today, we look at the positive side: <strong>Token ROI</strong>
+      .
     </p>
 
     <p>
@@ -96,6 +105,22 @@ const Post = () => (
       <br />
       Run <code>aiready analyze --business</code> to see your token waste.
     </p>
+
+    <div className="mt-12 p-8 bg-indigo-50 dark:bg-zinc-900 border border-indigo-100 dark:border-zinc-800 rounded-3xl">
+      <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-2">
+        Up Next
+      </div>
+      <h3 className="text-2xl font-black mb-4">
+        The AI-Ready Talent Moat: Why the Best Developers are Leaving Legacy
+      </h3>
+      <Link
+        href="/blog/agentic-roi-talent-moat"
+        className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+      >
+        Read Part 3
+        <ChevronRight className="w-4 h-4" />
+      </Link>
+    </div>
   </>
 );
 

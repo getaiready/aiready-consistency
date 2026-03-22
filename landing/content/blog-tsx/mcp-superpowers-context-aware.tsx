@@ -1,5 +1,7 @@
 import meta from './mcp-superpowers-context-aware.meta';
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight, Cpu } from 'lucide-react';
 
 const Post = () => (
   <>
@@ -137,6 +139,22 @@ const Post = () => (
       <br />
       Download the latest CLI: <code>npm install -g @aiready/cli</code>
     </p>
+
+    <div className="mt-12 p-8 bg-blue-50 dark:bg-zinc-900 border border-blue-100 dark:border-zinc-800 rounded-3xl">
+      <div className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-2">
+        Up Next
+      </div>
+      <h3 className="text-2xl font-black mb-4">
+        Domain-Specific Tools: Building Your Own MCP Servers
+      </h3>
+      <Link
+        href="/blog/mcp-superpowers-custom-tools"
+        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:underline"
+      >
+        Read Part 2
+        <ChevronRight className="w-4 h-4" />
+      </Link>
+    </div>
   </>
 );
 

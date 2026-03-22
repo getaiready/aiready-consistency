@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Clock, Hash, ChevronRight, Shield, Search, Zap } from 'lucide-react';
+import {
+  Clock,
+  Hash,
+  ChevronRight,
+  Shield,
+  Search,
+  Zap,
+  Scissors,
+} from 'lucide-react';
+import Link from 'next/link';
 import Navbar from '../../../components/Navbar';
 import Breadcrumbs from '../../../components/Breadcrumbs';
 import JsonLd from '../../../components/JsonLd';
@@ -223,21 +232,27 @@ export default function BlogPost() {
                 <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.4em] mb-8">
                   UP_NEXT_IN_THE_DECOUPLING
                 </div>
-                <div className="glass-card p-8 flex items-center justify-between opacity-50 bg-white/[0.01]">
-                  <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 rounded-sm bg-zinc-800 flex items-center justify-center text-zinc-500 border border-white/5">
-                      <Search className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <div className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
-                        PART 02 // THE_FIRST_CUT
+                <Link
+                  href="/blog/the-great-decoupling-02-first-cut"
+                  className="block group"
+                >
+                  <div className="glass-card p-8 flex items-center justify-between hover:border-cyber-purple/30 transition-all bg-white/[0.01]">
+                    <div className="flex items-center gap-6">
+                      <div className="w-12 h-12 rounded-sm bg-zinc-800 flex items-center justify-center text-zinc-500 border border-white/5 group-hover:border-cyber-purple/30 transition-colors">
+                        <Scissors className="w-6 h-6 group-hover:text-cyber-purple transition-colors" />
                       </div>
-                      <div className="text-2xl font-black italic">
-                        Coming Soon: Flattening the Hierarchy
+                      <div>
+                        <div className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1 group-hover:text-cyber-purple transition-colors">
+                          PART 02 // THE_FIRST_CUT
+                        </div>
+                        <div className="text-2xl font-black italic group-hover:text-white transition-colors">
+                          The First Cut: Flattening the Hierarchy
+                        </div>
                       </div>
                     </div>
+                    <ChevronRight className="w-6 h-6 text-zinc-700 group-hover:text-cyber-purple group-hover:translate-x-1 transition-all" />
                   </div>
-                </div>
+                </Link>
               </div>
             </article>
           </div>

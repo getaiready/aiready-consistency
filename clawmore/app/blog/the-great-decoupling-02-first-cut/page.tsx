@@ -10,6 +10,7 @@ import {
   Zap,
   ArrowRight,
 } from 'lucide-react';
+import Link from 'next/link';
 import Navbar from '../../../components/Navbar';
 import Breadcrumbs from '../../../components/Breadcrumbs';
 import JsonLd from '../../../components/JsonLd';
@@ -150,8 +151,14 @@ export default function BlogPost() {
                     The Rule of Three Jumps
                   </h2>
                   <p className="text-zinc-200 leading-relaxed text-lg">
-                    In <a href="/blog/the-great-decoupling-01-audit">Part 1</a>,
-                    we identified our context clusters. Now, we apply the
+                    In{' '}
+                    <Link
+                      href="/blog/the-great-decoupling-01-audit"
+                      className="text-cyber-purple hover:underline"
+                    >
+                      Part 1
+                    </Link>
+                    , we identified our context clusters. Now, we apply the
                     Surgical Process. Our goal is to reduce the &quot;Rule of
                     Three Jumps.&quot; If an agent has to jump more than three
                     files deep to find the source of a logic branch, the
@@ -219,21 +226,27 @@ export default function BlogPost() {
                 <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.4em] mb-8">
                   UP_NEXT_IN_THE_DECOUPLING
                 </div>
-                <div className="glass-card p-8 flex items-center justify-between opacity-50 bg-white/[0.01]">
-                  <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 rounded-sm bg-zinc-800 flex items-center justify-center text-zinc-500 border border-white/5">
-                      <Zap className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <div className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
-                        PART 03 // AGENTIC_PROTOCOL
+                <Link
+                  href="/blog/the-great-decoupling-03-protocol"
+                  className="block group"
+                >
+                  <div className="glass-card p-8 flex items-center justify-between hover:border-cyber-purple/30 transition-all bg-white/[0.01]">
+                    <div className="flex items-center gap-6">
+                      <div className="w-12 h-12 rounded-sm bg-zinc-800 flex items-center justify-center text-zinc-500 border border-white/5 group-hover:border-cyber-purple/30 transition-colors">
+                        <Zap className="w-6 h-6 group-hover:text-cyber-purple transition-colors" />
                       </div>
-                      <div className="text-2xl font-black italic">
-                        Coming Soon: The Agentic Protocol
+                      <div>
+                        <div className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mb-1 group-hover:text-cyber-purple transition-colors">
+                          PART 03 // AGENTIC_PROTOCOL
+                        </div>
+                        <div className="text-2xl font-black italic group-hover:text-white transition-colors">
+                          The Agentic Protocol: The Final Bridge
+                        </div>
                       </div>
                     </div>
+                    <ChevronRight className="w-6 h-6 text-zinc-700 group-hover:text-cyber-purple group-hover:translate-x-1 transition-all" />
                   </div>
-                </div>
+                </Link>
               </div>
             </article>
           </div>

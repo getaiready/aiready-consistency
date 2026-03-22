@@ -9,7 +9,9 @@ import {
   Cpu,
   Unplug,
   Box,
+  TrendingUp,
 } from 'lucide-react';
+import Link from 'next/link';
 import Navbar from '../../../components/Navbar';
 import Breadcrumbs from '../../../components/Breadcrumbs';
 import JsonLd from '../../../components/JsonLd';
@@ -134,7 +136,12 @@ export default function BlogPost() {
                   </h2>
                   <p className="text-zinc-200 leading-relaxed text-lg">
                     In{' '}
-                    <a href="/blog/the-great-decoupling-02-first-cut">Part 2</a>
+                    <Link
+                      href="/blog/the-great-decoupling-02-first-cut"
+                      className="text-cyber-purple hover:underline"
+                    >
+                      Part 2
+                    </Link>
                     , we extracted our core logic. But giving an AI agent 100
                     standalone files is just as confusing as giving it one
                     10,000-line God File. The agent needs to know <em>how</em>{' '}
@@ -204,7 +211,7 @@ export default function BlogPost() {
                   COMPLETED_SERIES // THE_GREAT_DECOUPLING
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <a
+                  <Link
                     href="/blog/the-great-decoupling-01-audit"
                     className="glass-card p-6 block hover:bg-white/[0.03] transition-colors"
                   >
@@ -214,8 +221,8 @@ export default function BlogPost() {
                     <div className="font-bold underline italic text-sm">
                       Auditing the Monolith
                     </div>
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="/blog/the-great-decoupling-02-first-cut"
                     className="glass-card p-6 block hover:bg-white/[0.03] transition-colors"
                   >
@@ -225,7 +232,34 @@ export default function BlogPost() {
                     <div className="font-bold underline italic text-sm">
                       The First Cut
                     </div>
-                  </a>
+                  </Link>
+                </div>
+
+                <div className="mt-16 pt-12 border-t border-white/5">
+                  <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.4em] mb-8">
+                    NEXT_SERIES // THE_OPENCLAW_CHRONICLES
+                  </div>
+                  <Link
+                    href="/blog/openclaw-chronicles-01-origin-story"
+                    className="block group"
+                  >
+                    <div className="glass-card p-8 flex items-center justify-between hover:border-cyber-purple/30 transition-all bg-white/[0.01]">
+                      <div className="flex items-center gap-6">
+                        <div className="w-12 h-12 rounded-sm bg-cyber-purple/10 flex items-center justify-center text-cyber-purple border border-cyber-purple/20">
+                          <TrendingUp className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <div className="text-[9px] font-mono text-cyber-purple uppercase tracking-widest mb-1">
+                            NEW SERIES // CHRONICLES
+                          </div>
+                          <div className="text-2xl font-black italic group-hover:text-white transition-colors">
+                            The Origin Story: From Clawdbot to 250k Stars
+                          </div>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-6 h-6 text-zinc-700 group-hover:text-cyber-purple group-hover:translate-x-1 transition-all" />
+                    </div>
+                  </Link>
                 </div>
               </div>
             </article>

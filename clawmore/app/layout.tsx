@@ -66,6 +66,7 @@ export const metadata: Metadata = {
 };
 
 import { headers } from 'next/headers';
+import Providers from '../components/Providers';
 
 export default async function RootLayout({
   children,
@@ -80,7 +81,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased text-left`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

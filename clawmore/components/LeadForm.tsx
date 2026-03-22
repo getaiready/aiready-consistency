@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { Loader2, Send, CheckCircle2 } from 'lucide-react';
 import { LeadSource } from '@aiready/core/client';
 
@@ -166,6 +167,20 @@ export default function LeadForm({
             </>
           )}
         </button>
+
+        {isBeta && (
+          <div className="text-center pt-2">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-white/30">
+              Already have an account?{' '}
+              <Link
+                href="/login"
+                className="text-cyber-blue hover:underline font-bold"
+              >
+                Sign In
+              </Link>
+            </p>
+          </div>
+        )}
 
         {status === 'error' && (
           <p className="text-red-400 text-xs text-center">{errorMessage}</p>

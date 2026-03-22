@@ -1,5 +1,7 @@
 import meta from './mcp-superpowers-orchestration-loop.meta';
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight, BarChart3 } from 'lucide-react';
 
 const Post = () => (
   <>
@@ -20,9 +22,15 @@ const Post = () => (
     </div>
 
     <p>
-      In <a href="/blog/mcp-superpowers-custom-tools">Part 2</a>, we gave our
-      agents bespoke &quot;superpowers&quot; through custom MCP tools. But as
-      your agentic workforce grows, you face a new challenge:
+      In{' '}
+      <Link
+        href="/blog/mcp-superpowers-custom-tools"
+        className="text-blue-600 hover:underline"
+      >
+        Part 2
+      </Link>
+      , we gave our agents bespoke &quot;superpowers&quot; through custom MCP
+      tools. But as your agentic workforce grows, you face a new challenge:
       <strong>The Orchestration Crisis</strong>.
     </p>
 
@@ -119,6 +127,22 @@ const plan = await mcp.readResource("mcp://architect/plans/decouple-auth-v1");`}
       <code>aiready</code> and deploying your first agentic core with
       <code>clawmore</code>.
     </p>
+
+    <div className="mt-12 p-8 bg-indigo-50 dark:bg-zinc-900 border border-indigo-100 dark:border-zinc-800 rounded-3xl">
+      <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-2">
+        Next Series
+      </div>
+      <h3 className="text-2xl font-black mb-4">
+        The Agentic ROI: Quantifying the Business Impact of AI-Readiness
+      </h3>
+      <Link
+        href="/blog/agentic-roi-navigation-tax"
+        className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+      >
+        Start the ROI Series
+        <ChevronRight className="w-4 h-4" />
+      </Link>
+    </div>
   </>
 );
 

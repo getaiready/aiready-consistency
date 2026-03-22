@@ -1,5 +1,7 @@
 import meta from './agentic-roi-navigation-tax.meta';
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 
 const Post = () => (
   <>
@@ -137,6 +139,22 @@ const Post = () => (
       <br />
       Run your first business audit: <code>npx @aiready/cli scan --score</code>
     </p>
+
+    <div className="mt-12 p-8 bg-indigo-50 dark:bg-zinc-900 border border-indigo-100 dark:border-zinc-800 rounded-3xl">
+      <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-2">
+        Up Next
+      </div>
+      <h3 className="text-2xl font-black mb-4">
+        Token ROI: Why Modularization is Your Most Effective Cloud Strategy
+      </h3>
+      <Link
+        href="/blog/agentic-roi-token-roi"
+        className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+      >
+        Read Part 2
+        <ChevronRight className="w-4 h-4" />
+      </Link>
+    </div>
   </>
 );
 

@@ -1,5 +1,7 @@
 import meta from './agentic-roi-talent-moat.meta';
 import React from 'react';
+import Link from 'next/link';
+import { ChevronRight, Shield } from 'lucide-react';
 
 const Post = () => (
   <>
@@ -20,9 +22,15 @@ const Post = () => (
     </div>
 
     <p>
-      In <a href="/blog/agentic-roi-token-roi">Part 2</a>, we discussed the
-      financial impact of Token ROI. But there is a second, more powerful ROI
-      that doesn&apos;t show up on a cloud bill:{' '}
+      In{' '}
+      <Link
+        href="/blog/agentic-roi-token-roi"
+        className="text-blue-600 hover:underline"
+      >
+        Part 2
+      </Link>
+      , we discussed the financial impact of Token ROI. But there is a second,
+      more powerful ROI that doesn&apos;t show up on a cloud bill:{' '}
       <strong>Talent Retention</strong>.
     </p>
 
@@ -114,6 +122,22 @@ const Post = () => (
       Ready to start building? Run <code>aiready scan</code> and see where your
       moat stands today.
     </p>
+
+    <div className="mt-12 p-8 bg-blue-50 dark:bg-zinc-900 border border-blue-100 dark:border-zinc-800 rounded-3xl">
+      <div className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-2">
+        Next Series
+      </div>
+      <h3 className="text-2xl font-black mb-4">
+        The Agentic Readiness Shift: Building for Autonomous Engineers
+      </h3>
+      <Link
+        href="/blog/the-agentic-wall"
+        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:underline"
+      >
+        Read The Agentic Wall
+        <ChevronRight className="w-4 h-4" />
+      </Link>
+    </div>
   </>
 );
 

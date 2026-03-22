@@ -5,7 +5,14 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { cn } from '@aiready/components';
-import { FileCode, BookOpen, Menu, X, ExternalLink } from 'lucide-react';
+import {
+  FileCode,
+  BookOpen,
+  Menu,
+  X,
+  ExternalLink,
+  ArrowLeft,
+} from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export function Header() {
@@ -13,6 +20,14 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isDocs = pathname?.startsWith('/docs');
   const isBlog = pathname?.startsWith('/blog');
+  const normalizedPathname =
+    pathname
+      ?.replace(/\/$/, '')
+      .replace(/\/index\.html$/, '')
+      .replace(/\/index$/, '') || '';
+  const isBlogIndex = normalizedPathname === '/blog';
+  const isBlogPost =
+    normalizedPathname.startsWith('/blog/') && normalizedPathname !== '/blog';
 
   // Close menu on route change
   useEffect(() => {
@@ -74,32 +89,49 @@ export function Header() {
       className="sticky top-0 z-50 backdrop-blur-lg bg-white/70 dark:bg-slate-900/80 border-b border-slate-200/50 dark:border-zinc-800/50 shadow-sm"
     >
       <nav className="container mx-auto px-4 py-2 flex items-center justify-between relative">
-        <Link href="/">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className={cn(
-              'flex items-center gap-2 flex-shrink-0 transition-all duration-300 relative z-[60]',
-              !isBlog && !isDocs && 'drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]'
-            )}
-          >
-            <Image
-              src="/logo-text-transparent.png"
-              alt="AIReady Logo"
-              width={210}
-              height={48}
-              className="h-8 sm:h-10 md:h-12 w-auto dark:hidden"
-              priority
-            />
-            <Image
-              src="/logo-text-dark.png"
-              alt="AIReady Logo"
-              width={210}
-              height={48}
-              className="h-8 sm:h-10 md:h-12 w-auto hidden dark:block"
-              priority
-            />
-          </motion.div>
-        </Link>
+        <div className="flex items-center gap-4 flex-shrink-0">
+          {(isBlogIndex || isBlogPost) && (
+            <Link
+              href={isBlogIndex ? '/' : '/blog'}
+              className="flex items-center gap-1.5 text-sm md:text-base font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors group"
+            >
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span className="hidden sm:inline-block">
+                {isBlogIndex ? 'Back to Home' : 'Back to Journal'}
+              </span>
+              <span className="sm:hidden">Back</span>
+            </Link>
+          )}
+
+          <Link href="/">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className={cn(
+                'flex items-center gap-2 transition-all duration-300 relative z-[60]',
+                !isBlog &&
+                  !isDocs &&
+                  'drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]'
+              )}
+            >
+              <Image
+                src="/logo-text-transparent.png"
+                alt="AIReady Logo"
+                width={210}
+                height={48}
+                className="h-8 sm:h-10 md:h-12 w-auto dark:hidden"
+                priority
+              />
+              <Image
+                src="/logo-text-dark.png"
+                alt="AIReady Logo"
+                width={210}
+                height={48}
+                className="h-8 sm:h-10 md:h-12 w-auto hidden dark:block"
+                priority
+              />
+            </motion.div>
+          </Link>
+        </div>
 
         {/* Desktop Navigation */}
         <div className="hidden sm:flex items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8">
