@@ -13,6 +13,7 @@ import type {
 import { analyzeNamingAST } from './analyzers/naming-ast';
 import { analyzeNamingGeneralized } from './analyzers/naming-generalized';
 import { analyzePatterns } from './analyzers/patterns';
+import { calculateConsistencyScore as calculateConsistencyScoreFromScoring } from './scoring';
 
 /**
  * Main consistency analyzer that orchestrates all analysis types.
@@ -90,11 +91,15 @@ export async function analyzeConsistency(
 
   // Build final results
   for (const [fileName, issues] of fileIssuesMap.entries()) {
+    const scoreResult = calculateConsistencyScoreFromScoring(
+      issues,
+      filePaths.length
+    );
     results.push({
       fileName,
       issues: issues.map((i) => transformToIssue(i)),
       metrics: {
-        consistencyScore: calculateConsistencyScore(issues),
+        consistencyScore: scoreResult.score / 100,
       },
     });
   }
@@ -233,29 +238,4 @@ function transformToIssue(i: any): Issue {
     location: i.location || { file: '', line: 1, column: 1 },
     suggestion: i.suggestion,
   };
-}
-
-function calculateConsistencyScore(issues: ConsistencyIssue[]): number {
-  let totalWeight = 0;
-  for (const issue of issues) {
-    const val = getSeverityLevel(issue.severity);
-    switch (val) {
-      case 4:
-        totalWeight += 10;
-        break;
-      case 3:
-        totalWeight += 5;
-        break;
-      case 2:
-        totalWeight += 2;
-        break;
-      case 1:
-        totalWeight += 1;
-        break;
-      default:
-        totalWeight += 1;
-    }
-  }
-  // Score from 0-1, where 1 is perfect
-  return Math.max(0, 1 - totalWeight / 100);
 }
