@@ -112,9 +112,11 @@ export default $config({
     const sesDomain = isProd ? 'getaiready.dev' : 'dev.getaiready.dev';
 
     // SNS Topic for System Alerts
-    const alertsTopic = new sst.aws.SnsTopic('SystemAlerts');
-    // Note: Subscription (e.g. to email) should be done manually or via AWS Console
-    // for security/privacy, or added here if the email is fixed.
+    const alertsTopic = new sst.aws.SnsTopic('SystemAlerts', {
+      subscriptions: {
+        email: process.env.SES_TO_EMAIL || 'caopengau@gmail.com',
+      },
+    });
 
     // DynamoDB Table for all entities (Single Table Design)
     // TTL enabled for automatic cleanup of old analyses (Free tier: 7 days)
