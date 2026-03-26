@@ -12,6 +12,7 @@ import {
   isAcceptableInContext,
   adjustSeverity,
 } from '../utils/context-detector';
+import { ACCEPTABLE_ABBREVIATIONS, VAGUE_NAMES } from './naming-constants';
 
 /**
  * Advanced naming analyzer using TypeScript AST
@@ -157,6 +158,7 @@ function checkVariableNaming(
   context: any
 ) {
   const { name, line, options } = varInfo;
+  const nameLower = name.toLowerCase();
 
   // Skip very common small names if they are in acceptable context
   if (isAcceptableInContext(name, context, options)) {
@@ -167,7 +169,8 @@ function checkVariableNaming(
   if (
     name.length === 1 &&
     !options.isLoopVariable &&
-    !options.isArrowParameter
+    !options.isArrowParameter &&
+    !ACCEPTABLE_ABBREVIATIONS.has(nameLower)
   ) {
     const severity = adjustSeverity(Severity.Minor, context, 'poor-naming');
     issues.push({
@@ -181,18 +184,7 @@ function checkVariableNaming(
   }
 
   // 2. Vague names
-  const vagueNames = [
-    'data',
-    'info',
-    'item',
-    'obj',
-    'val',
-    'tmp',
-    'temp',
-    'thing',
-    'stuff',
-  ];
-  if (vagueNames.includes(name.toLowerCase())) {
+  if (VAGUE_NAMES.has(nameLower)) {
     const severity = adjustSeverity(Severity.Minor, context, 'poor-naming');
     issues.push({
       file,
@@ -209,7 +201,7 @@ function checkVariableNaming(
     name.length > 1 &&
     name.length <= 3 &&
     !options.isLoopVariable &&
-    !isCommonAbbreviation(name)
+    !ACCEPTABLE_ABBREVIATIONS.has(nameLower)
   ) {
     const severity = adjustSeverity(Severity.Info, context, 'abbreviation');
     issues.push({
@@ -221,51 +213,6 @@ function checkVariableNaming(
       suggestion: 'Avoid non-standard abbreviations',
     });
   }
-}
-
-function isCommonAbbreviation(name: string): boolean {
-  const common = [
-    'id',
-    'db',
-    'fs',
-    'os',
-    'ip',
-    'ui',
-    'ux',
-    'api',
-    'env',
-    'url',
-    'req',
-    'res',
-    'err',
-    'ctx',
-    'cb',
-    'idx',
-    'src',
-    'dir',
-    'app',
-    'dev',
-    'qa',
-    'dto',
-    'dao',
-    'ref',
-    'ast',
-    'dom',
-    'log',
-    'msg',
-    'pkg',
-    'req',
-    'err',
-    'res',
-    'css',
-    'html',
-    'xml',
-    'jsx',
-    'tsx',
-    'ts',
-    'js',
-  ];
-  return common.includes(name.toLowerCase());
 }
 
 /**

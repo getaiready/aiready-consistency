@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { Severity } from '@aiready/core';
 import type { NamingIssue } from '../types';
+import { VAGUE_NAMES, ACCEPTABLE_ABBREVIATIONS } from './naming-constants';
 
 /**
  * Legacy regex-based naming analyzer
@@ -25,7 +26,10 @@ export async function analyzeNaming(
         const singleLetterMatch = line.match(
           /\b(const|let|var)\s+([a-hj-km-np-zA-Z])\s*=/
         );
-        if (singleLetterMatch) {
+        if (
+          singleLetterMatch &&
+          !ACCEPTABLE_ABBREVIATIONS.has(singleLetterMatch[2].toLowerCase())
+        ) {
           issues.push({
             file: filePath,
             line: index + 1,
@@ -54,14 +58,13 @@ export async function analyzeNaming(
           }
         }
 
-        // 3. Very short names
+        // 3. Very short names or vague names
         const shortNameMatch = line.match(
-          /\b(const|let|var)\s+([a-zA-Z0-9]{2,3})\s*=/
+          /\b(const|let|var)\s+([a-zA-Z0-9]{1,4})\s*=/
         );
         if (shortNameMatch) {
           const name = shortNameMatch[2].toLowerCase();
-          const vagueNames = ['obj', 'val', 'tmp', 'res', 'ret', 'data'];
-          if (vagueNames.includes(name)) {
+          if (VAGUE_NAMES.has(name)) {
             issues.push({
               file: filePath,
               line: index + 1,

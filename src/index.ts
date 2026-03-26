@@ -5,6 +5,9 @@ import { ConsistencyProvider } from './provider';
 ToolRegistry.register(ConsistencyProvider);
 
 export { analyzeConsistency } from './analyzer';
+export function generateSummary(report: any) {
+  return report.summary;
+}
 export { analyzeNamingAST } from './analyzers/naming-ast';
 export { analyzeNaming } from './analyzers/naming'; // Legacy regex version
 export { detectNamingConventions } from './analyzers/naming-constants';

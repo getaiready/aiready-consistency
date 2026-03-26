@@ -3,6 +3,38 @@
  * Extracted from naming.ts and naming-ast.ts to reduce duplication
  */
 
+// Vague names that should be avoided as identifiers
+export const VAGUE_NAMES = new Set([
+  'data',
+  'info',
+  'item',
+  'obj',
+  'val',
+  'tmp',
+  'temp',
+  'thing',
+  'stuff',
+  'res',
+  'ret',
+  'result',
+  'output',
+  'input',
+  'params',
+  'args',
+  'props',
+  'state',
+  'value',
+  'list',
+  'array',
+  'map',
+  'set',
+  'manager',
+  'handler',
+  'helper',
+  'util',
+  'common',
+]);
+
 // Common short English words that are NOT abbreviations (full, valid words)
 export const COMMON_SHORT_WORDS = new Set([
   // Full English words (1-3 letters)
