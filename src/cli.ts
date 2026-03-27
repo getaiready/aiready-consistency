@@ -161,10 +161,10 @@ function displayConsoleReport(report: any, elapsedTime: string): void {
 
   // Group issues by category
   const namingResults = results.filter((r: any) =>
-    r.issues.some((i: any) => i.category === 'naming')
+    r.issues?.some((i: any) => i.category === 'naming')
   );
   const patternResults = results.filter((r: any) =>
-    r.issues.some((i: any) => i.category === 'patterns')
+    r.issues?.some((i: any) => i.category === 'patterns')
   );
 
   if (namingResults.length > 0) {
@@ -190,7 +190,7 @@ function displayCategoryIssues(results: any[], maxToShow: number): void {
   for (const result of results) {
     if (shown >= maxToShow) break;
 
-    for (const issue of result.issues) {
+    for (const issue of result.issues || []) {
       if (shown >= maxToShow) break;
 
       const severityColor =
@@ -217,7 +217,7 @@ function displayCategoryIssues(results: any[], maxToShow: number): void {
   }
 
   const remaining =
-    results.reduce((sum, r) => sum + r.issues.length, 0) - shown;
+    results.reduce((sum, r) => sum + (r.issues?.length || 0), 0) - shown;
   if (remaining > 0) {
     console.log(chalk.dim(`  ... and ${remaining} more patterns\n`));
   }
@@ -246,12 +246,12 @@ function generateMarkdownReport(report: any, elapsedTime: string): string {
 
   // Naming patterns
   const namingResults = results.filter((r: any) =>
-    r.issues.some((i: any) => i.category === 'naming')
+    r.issues?.some((i: any) => i.category === 'naming')
   );
   if (namingResults.length > 0) {
     markdown += `### 🏷️ Naming Patterns\n\n`;
     for (const result of namingResults) {
-      for (const issue of result.issues) {
+      for (const issue of result.issues || []) {
         if (issue.category !== 'naming') continue;
         markdown += `- **${issue.severity.toUpperCase()}** \`${issue.location.file}:${issue.location.line}\`\n`;
         markdown += `  - ${issue.message}\n`;
@@ -265,12 +265,12 @@ function generateMarkdownReport(report: any, elapsedTime: string): string {
 
   // Code patterns
   const patternResults = results.filter((r: any) =>
-    r.issues.some((i: any) => i.category === 'patterns')
+    r.issues?.some((i: any) => i.category === 'patterns')
   );
   if (patternResults.length > 0) {
     markdown += `### 🔄 Code Patterns\n\n`;
     for (const result of patternResults) {
-      for (const issue of result.issues) {
+      for (const issue of result.issues || []) {
         if (issue.category !== 'patterns') continue;
         markdown += `- **${issue.severity.toUpperCase()}** ${issue.message}\n`;
         if (issue.examples && issue.examples.length > 0) {
