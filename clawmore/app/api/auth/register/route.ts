@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { z } from 'zod';
+import { sendWelcomeEmail } from '../../../../lib/email';
 
 const dbClient = new DynamoDBClient({
   region: process.env.AWS_REGION || 'ap-southeast-2',
