@@ -35,7 +35,7 @@ export default $config({
 
     // --- Stripe Products & Prices (IaC) ---
 
-    // 1. Managed Platform Subscription ($29/mo)
+    // 1. Managed Platform Subscription ($29/mo - Starter)
     const platformProduct = new (stripe as any).Product(
       'PlatformProduct',
       {
@@ -53,6 +53,33 @@ export default $config({
         unitAmount: 2900,
         currency: 'usd',
         recurring: { interval: 'month', intervalCount: 1 },
+        metadata: { tier: 'starter' },
+      },
+      { provider: stripeProvider }
+    );
+
+    // 1b. Pro tier ($99/mo)
+    const proPrice = new (stripe as any).Price(
+      'ProPrice',
+      {
+        product: platformProduct.id,
+        unitAmount: 9900,
+        currency: 'usd',
+        recurring: { interval: 'month', intervalCount: 1 },
+        metadata: { tier: 'pro' },
+      },
+      { provider: stripeProvider }
+    );
+
+    // 1c. Team tier ($299/mo)
+    const teamPrice = new (stripe as any).Price(
+      'TeamPrice',
+      {
+        product: platformProduct.id,
+        unitAmount: 29900,
+        currency: 'usd',
+        recurring: { interval: 'month', intervalCount: 1 },
+        metadata: { tier: 'team' },
       },
       { provider: stripeProvider }
     );
@@ -248,7 +275,17 @@ export default $config({
           resources: ['*'],
         },
       ],
-      link: [api, leads, table, aiQueue, bus, platformPrice, fuelPackPrice],
+      link: [
+        api,
+        leads,
+        table,
+        aiQueue,
+        bus,
+        platformPrice,
+        proPrice,
+        teamPrice,
+        fuelPackPrice,
+      ],
     });
 
     return {

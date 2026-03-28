@@ -58,9 +58,9 @@
   "pricing": {
     "model": "Simple Pricing",
     "title": "Start Free, Scale When Ready",
-    "subtitle": "No credit card required. Cancel anytime.",
+    "subtitle": "Open-source stack available for self-hosting. Cancel anytime.",
     "community": {
-      "name": "Free Tier",
+      "name": "Free",
       "badge": "OPEN SOURCE",
       "price": "FREE",
       "subtext": "Self-hosted, forever free",
@@ -73,22 +73,52 @@
       ]
     },
     "managed": {
-      "name": "Managed",
-      "badge": "MOST POPULAR",
+      "name": "Starter",
+      "badge": "",
       "price": "$29",
       "period": "/mo",
-      "subtext": "Managed infra + $10 AI credit included",
+      "subtext": "Dashboard + AI fixes",
       "features": [
-        "Dashboard & trend tracking",
+        "5 repositories",
+        "Unlimited scans",
         "AI-powered auto-fixes",
+        "Email support",
+        "$10/month AI credit"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "badge": "MOST POPULAR",
+      "price": "$99",
+      "period": "/mo",
+      "subtext": "For growing teams",
+      "features": [
+        "15 repositories",
         "CI/CD integration",
+        "Trend tracking & reports",
         "Priority support",
-        "$10/month AI token credit"
+        "$30/month AI credit",
+        "Slack notifications"
+      ]
+    },
+    "team": {
+      "name": "Team",
+      "badge": "",
+      "price": "$299",
+      "period": "/mo",
+      "subtext": "For engineering orgs",
+      "features": [
+        "50 repositories",
+        "CI/CD gatekeeper",
+        "SSO & team management",
+        "Dedicated support",
+        "$100/month AI credit",
+        "Custom rules & policies"
       ]
     },
     "tax": {
       "title": "How AI Credits Work",
-      "desc": "Your $10/month credit covers AI-powered code fixes. When you run low, top up with a $10 fuel pack. You only pay for what you use — no hidden fees."
+      "desc": "Your monthly credit covers AI-powered code fixes. When you run low, top up with a $10 pack. You only pay for what you use."
     }
   },
   "faq": {

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '../../../../auth';
 import { createPlatformSubscriptionSession } from '../../../../lib/billing';
 import { getUserMetadata } from '../../../../lib/db';
+import { createLogger } from '../../../../lib/logger';
+
+const log = createLogger('checkout');
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,6 +13,9 @@ export async function POST(req: NextRequest) {
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const body = await req.json().catch(() => ({}));
+    const tier = body.tier || 'pro'; // default to Pro ($49)
 
     const host =
       process.env.NEXT_PUBLIC_APP_URL || `https://${req.headers.get('host')}`;
@@ -21,6 +27,7 @@ export async function POST(req: NextRequest) {
     const checkoutSession = await createPlatformSubscriptionSession({
       customerId: existingCustomerId,
       userEmail: session.user.email,
+      tier,
       successUrl: `${host}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${host}/dashboard`,
     });
@@ -31,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (error) {
-    console.error('Error creating platform checkout:', error);
+    log.error({ err: error }, 'Checkout session creation failed');
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

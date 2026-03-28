@@ -406,73 +406,31 @@ export default function ClawMoreClient({ apiUrl, dict }: ClawMoreClientProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-            {/* Free Tier - STYLISH & EQUAL */}
-            <div className="glass-card p-6 sm:p-10 flex flex-col border-purple-500/30 bg-purple-500/[0.03] hover:border-purple-500/50 transition-all shadow-[0_0_80px_rgba(188,0,255,0.08)] relative">
-              <div className="absolute top-0 right-4 sm:right-10 -translate-y-1/2 px-3 sm:px-4 py-1.5 rounded-sm bg-purple-600 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] shadow-[0_0_20px_rgba(188,0,255,0.3)] z-10">
-                {dict.pricing.community.badge}
-              </div>
-              <div className="mb-10">
-                <h4 className="text-purple-400 font-mono text-xs uppercase tracking-widest font-black mb-2">
-                  {dict.pricing.community.name}
-                </h4>
-                <div className="flex items-baseline gap-2">
-                  <div className="text-5xl sm:text-6xl font-black tracking-tight text-white">
-                    {dict.pricing.community.price}
-                  </div>
-                </div>
-                <p className="text-xs font-mono text-purple-300 uppercase mt-4 tracking-tighter font-bold">
-                  {dict.pricing.community.subtext}
-                </p>
-              </div>
-              <ul className="space-y-5 mb-12 flex-grow">
-                {dict.pricing.community.features.map(
-                  (feature: string, idx: number) => (
-                    <li
-                      key={idx}
-                      className="flex items-center gap-3 text-sm text-zinc-100"
-                    >
-                      <ShieldCheck className="w-5 h-5 text-purple-400 shrink-0" />{' '}
-                      {feature}
-                    </li>
-                  )
-                )}
-              </ul>
-              <Link
-                href="/signup"
-                className="w-full py-5 rounded-sm bg-purple-600 hover:bg-purple-500 transition-all text-white text-xs font-black uppercase text-center tracking-widest shadow-[0_0_25px_rgba(188,0,255,0.2)]"
-              >
-                {dict.common.startFree} (OSS)
-              </Link>
-            </div>
-
-            {/* Pro Tier - EQUAL SCALE */}
-            <div className="glass-card p-6 sm:p-10 border-cyber-blue/30 bg-cyber-blue/[0.03] relative flex flex-col hover:border-cyber-blue/50 transition-all shadow-[0_0_80px_rgba(0,224,255,0.08)]">
-              <div className="absolute top-0 right-4 sm:right-10 -translate-y-1/2 px-3 sm:px-4 py-1.5 rounded-sm bg-cyber-blue text-black text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] shadow-[0_0_20px_rgba(0,224,255,0.3)] z-10">
-                {dict.pricing.managed.badge}
-              </div>
-              <div className="mb-10">
-                <h4 className="text-cyber-blue font-mono text-xs uppercase tracking-widest font-black mb-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Starter Tier */}
+            <div className="glass-card p-6 sm:p-8 flex flex-col border-white/10 hover:border-white/20 transition-all">
+              <div className="mb-8">
+                <h4 className="text-zinc-400 font-mono text-xs uppercase tracking-widest font-black mb-2">
                   {dict.pricing.managed.name}
                 </h4>
-                <div className="text-5xl sm:text-6xl font-black tracking-tight text-white">
+                <div className="text-4xl sm:text-5xl font-black tracking-tight text-white">
                   {dict.pricing.managed.price}
-                  <span className="text-2xl font-normal text-zinc-500">
+                  <span className="text-xl font-normal text-zinc-500">
                     {dict.pricing.managed.period}
                   </span>
                 </div>
-                <p className="text-xs font-mono text-cyber-blue uppercase mt-4 tracking-tighter font-bold">
+                <p className="text-[10px] font-mono text-zinc-500 uppercase mt-3 tracking-tighter font-bold">
                   {dict.pricing.managed.subtext}
                 </p>
               </div>
-              <ul className="space-y-5 mb-12 flex-grow">
+              <ul className="space-y-4 mb-10 flex-grow">
                 {dict.pricing.managed.features.map(
                   (feature: string, idx: number) => (
                     <li
                       key={idx}
                       className="flex items-center gap-3 text-sm text-zinc-100"
                     >
-                      <Zap className="w-5 h-5 text-cyber-blue shrink-0" />{' '}
+                      <Zap className="w-4 h-4 text-zinc-400 shrink-0" />{' '}
                       {feature}
                     </li>
                   )
@@ -480,9 +438,88 @@ export default function ClawMoreClient({ apiUrl, dict }: ClawMoreClientProps) {
               </ul>
               <Link
                 href="/signup"
-                className="w-full py-5 rounded-sm bg-cyber-blue hover:bg-cyber-blue/90 transition-all text-black text-xs font-black uppercase text-center tracking-widest shadow-[0_0_25px_rgba(0,224,255,0.2)]"
+                className="w-full py-4 rounded-sm bg-white hover:bg-zinc-200 transition-all text-black text-xs font-black uppercase text-center tracking-widest"
               >
-                {dict.common.managedWaitlist}
+                Start Starter Plan
+              </Link>
+            </div>
+
+            {/* Pro Tier - MOST POPULAR */}
+            <div className="glass-card p-6 sm:p-8 border-cyber-blue/30 bg-cyber-blue/[0.03] relative flex flex-col hover:border-cyber-blue/50 transition-all shadow-[0_0_80px_rgba(0,224,255,0.08)]">
+              {dict.pricing.pro.badge && (
+                <div className="absolute top-0 right-4 sm:right-8 -translate-y-1/2 px-3 py-1.5 rounded-sm bg-cyber-blue text-black text-[9px] font-black uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(0,224,255,0.3)] z-10">
+                  {dict.pricing.pro.badge}
+                </div>
+              )}
+              <div className="mb-8">
+                <h4 className="text-cyber-blue font-mono text-xs uppercase tracking-widest font-black mb-2">
+                  {dict.pricing.pro.name}
+                </h4>
+                <div className="text-4xl sm:text-5xl font-black tracking-tight text-white">
+                  {dict.pricing.pro.price}
+                  <span className="text-xl font-normal text-zinc-500">
+                    {dict.pricing.pro.period}
+                  </span>
+                </div>
+                <p className="text-[10px] font-mono text-cyber-blue uppercase mt-3 tracking-tighter font-bold">
+                  {dict.pricing.pro.subtext}
+                </p>
+              </div>
+              <ul className="space-y-4 mb-10 flex-grow">
+                {dict.pricing.pro.features.map(
+                  (feature: string, idx: number) => (
+                    <li
+                      key={idx}
+                      className="flex items-center gap-3 text-sm text-zinc-100"
+                    >
+                      <Zap className="w-4 h-4 text-cyber-blue shrink-0" />{' '}
+                      {feature}
+                    </li>
+                  )
+                )}
+              </ul>
+              <Link
+                href="/signup"
+                className="w-full py-4 rounded-sm bg-cyber-blue hover:bg-cyber-blue/90 transition-all text-black text-xs font-black uppercase text-center tracking-widest shadow-[0_0_25px_rgba(0,224,255,0.2)]"
+              >
+                Start Pro Plan
+              </Link>
+            </div>
+
+            {/* Team Tier */}
+            <div className="glass-card p-6 sm:p-8 flex flex-col border-amber-500/20 bg-amber-500/[0.02] hover:border-amber-500/40 transition-all">
+              <div className="mb-8">
+                <h4 className="text-amber-400 font-mono text-xs uppercase tracking-widest font-black mb-2">
+                  {dict.pricing.team.name}
+                </h4>
+                <div className="text-4xl sm:text-5xl font-black tracking-tight text-white">
+                  {dict.pricing.team.price}
+                  <span className="text-xl font-normal text-zinc-500">
+                    {dict.pricing.team.period}
+                  </span>
+                </div>
+                <p className="text-[10px] font-mono text-amber-400/70 uppercase mt-3 tracking-tighter font-bold">
+                  {dict.pricing.team.subtext}
+                </p>
+              </div>
+              <ul className="space-y-4 mb-10 flex-grow">
+                {dict.pricing.team.features.map(
+                  (feature: string, idx: number) => (
+                    <li
+                      key={idx}
+                      className="flex items-center gap-3 text-sm text-zinc-100"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />{' '}
+                      {feature}
+                    </li>
+                  )
+                )}
+              </ul>
+              <Link
+                href="/signup"
+                className="w-full py-4 rounded-sm bg-amber-500 hover:bg-amber-400 transition-all text-black text-xs font-black uppercase text-center tracking-widest"
+              >
+                Start Team Plan
               </Link>
             </div>
           </div>

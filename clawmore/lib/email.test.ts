@@ -10,9 +10,11 @@ vi.mock('@aws-sdk/client-ses', () => {
     constructor() {}
   }
   class MockSendEmailCommand {
-    args: any;
+    Destination: any;
+    Source!: string;
+    Message: any;
     constructor(args: any) {
-      this.args = args;
+      Object.assign(this, args);
     }
   }
   return { SESClient: MockSESClient, SendEmailCommand: MockSendEmailCommand };
@@ -40,14 +42,14 @@ describe('email service', () => {
       await sendApprovalEmail('user@example.com', 'Jane');
 
       expect(mockSend).toHaveBeenCalledTimes(1);
-      const call = mockSend.mock.calls[0][0];
-      expect(call.Destination.ToAddresses).toEqual(['user@example.com']);
-      expect(call.Message.Subject.Data).toBe(
+      const cmd = mockSend.mock.calls[0][0];
+      expect(cmd.Destination.ToAddresses).toEqual(['user@example.com']);
+      expect(cmd.Message.Subject.Data).toBe(
         'Your ClawMore Account is Approved'
       );
-      expect(call.Message.Html.Data).toContain('Jane');
-      expect(call.Message.Html.Data).toContain('/login');
-      expect(call.Message.Text.Data).toContain('Jane');
+      expect(cmd.Message.Body.Html.Data).toContain('Jane');
+      expect(cmd.Message.Body.Html.Data).toContain('/login');
+      expect(cmd.Message.Body.Text.Data).toContain('Jane');
     });
 
     it('should escape HTML in user name', async () => {
@@ -56,9 +58,9 @@ describe('email service', () => {
         '<script>alert("xss")</script>'
       );
 
-      const call = mockSend.mock.calls[0][0];
-      expect(call.Message.Html.Data).not.toContain('<script>');
-      expect(call.Message.Html.Data).toContain('&lt;script&gt;');
+      const cmd = mockSend.mock.calls[0][0];
+      expect(cmd.Message.Body.Html.Data).not.toContain('<script>');
+      expect(cmd.Message.Body.Html.Data).toContain('&lt;script&gt;');
     });
   });
 
@@ -67,13 +69,13 @@ describe('email service', () => {
       await sendWelcomeEmail('new@example.com', 'Bob');
 
       expect(mockSend).toHaveBeenCalledTimes(1);
-      const call = mockSend.mock.calls[0][0];
-      expect(call.Destination.ToAddresses).toEqual(['new@example.com']);
-      expect(call.Message.Subject.Data).toBe('Welcome to ClawMore');
-      expect(call.Message.Html.Data).toContain('Bob');
-      expect(call.Message.Html.Data).toContain('$5');
-      expect(call.Message.Html.Data).toContain('/dashboard');
-      expect(call.Message.Html.Data).toContain('3 repositories');
+      const cmd = mockSend.mock.calls[0][0];
+      expect(cmd.Destination.ToAddresses).toEqual(['new@example.com']);
+      expect(cmd.Message.Subject.Data).toBe('Welcome to ClawMore');
+      expect(cmd.Message.Body.Html.Data).toContain('Bob');
+      expect(cmd.Message.Body.Html.Data).toContain('$5');
+      expect(cmd.Message.Body.Html.Data).toContain('/dashboard');
+      expect(cmd.Message.Body.Html.Data).toContain('3 repositories');
     });
   });
 
@@ -82,12 +84,12 @@ describe('email service', () => {
       await sendPaymentFailedEmail('fail@example.com', 'Alice');
 
       expect(mockSend).toHaveBeenCalledTimes(1);
-      const call = mockSend.mock.calls[0][0];
-      expect(call.Destination.ToAddresses).toEqual(['fail@example.com']);
-      expect(call.Message.Subject.Data).toBe('Action Required: Payment Failed');
-      expect(call.Message.Html.Data).toContain('Alice');
-      expect(call.Message.Html.Data).toContain('Payment Failed');
-      expect(call.Message.Html.Data).toContain('/dashboard?tab=account');
+      const cmd = mockSend.mock.calls[0][0];
+      expect(cmd.Destination.ToAddresses).toEqual(['fail@example.com']);
+      expect(cmd.Message.Subject.Data).toBe('Action Required: Payment Failed');
+      expect(cmd.Message.Body.Html.Data).toContain('Alice');
+      expect(cmd.Message.Body.Html.Data).toContain('Payment Failed');
+      expect(cmd.Message.Body.Html.Data).toContain('/dashboard?tab=account');
     });
   });
 
@@ -96,13 +98,13 @@ describe('email service', () => {
       await sendSubscriptionCancelledEmail('cancel@example.com', 'Charlie');
 
       expect(mockSend).toHaveBeenCalledTimes(1);
-      const call = mockSend.mock.calls[0][0];
-      expect(call.Destination.ToAddresses).toEqual(['cancel@example.com']);
-      expect(call.Message.Subject.Data).toBe('ClawMore Subscription Cancelled');
-      expect(call.Message.Html.Data).toContain('Charlie');
-      expect(call.Message.Html.Data).toContain('Subscription Cancelled');
-      expect(call.Message.Html.Data).toContain('/#pricing');
-      expect(call.Message.Html.Data).toContain('10 scans per month');
+      const cmd = mockSend.mock.calls[0][0];
+      expect(cmd.Destination.ToAddresses).toEqual(['cancel@example.com']);
+      expect(cmd.Message.Subject.Data).toBe('ClawMore Subscription Cancelled');
+      expect(cmd.Message.Body.Html.Data).toContain('Charlie');
+      expect(cmd.Message.Body.Html.Data).toContain('Subscription Cancelled');
+      expect(cmd.Message.Body.Html.Data).toContain('/#pricing');
+      expect(cmd.Message.Body.Html.Data).toContain('10 scans per month');
     });
   });
 

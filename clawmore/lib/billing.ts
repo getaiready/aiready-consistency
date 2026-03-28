@@ -25,14 +25,20 @@ export interface PlatformSubscriptionOpts {
   userName?: string;
   repoName?: string;
   coEvolutionOptIn?: boolean;
+  tier?: 'starter' | 'pro' | 'team';
   successUrl: string;
   cancelUrl: string;
 }
 
-/**
- * Creates a Stripe Checkout Session for the $29.00/mo Platform Subscription.
- * Accepts an options object to avoid positional boolean traps.
- */
+const TIER_CONFIG: Record<
+  string,
+  { priceKey: string; amount: number; name: string }
+> = {
+  starter: { priceKey: 'PlatformPrice', amount: 2900, name: 'Starter' },
+  pro: { priceKey: 'ProPrice', amount: 9900, name: 'Pro' },
+  team: { priceKey: 'TeamPrice', amount: 29900, name: 'Team' },
+};
+
 export async function createPlatformSubscriptionSession(
   opts: PlatformSubscriptionOpts
 ) {
@@ -42,12 +48,13 @@ export async function createPlatformSubscriptionSession(
     userName = 'Valued Client',
     repoName,
     coEvolutionOptIn = false,
+    tier = 'pro',
     successUrl,
     cancelUrl,
   } = opts;
 
-  // Use the linked price ID from SST if it exists
-  const priceId = (Resource as any).PlatformPrice?.id;
+  const tierConfig = TIER_CONFIG[tier] || TIER_CONFIG.pro;
+  const priceId = (Resource as any)[tierConfig.priceKey]?.id;
 
   // Auto-generate repo name if not provided
   const finalRepoName =
@@ -64,11 +71,11 @@ export async function createPlatformSubscriptionSession(
             price_data: {
               currency: 'usd',
               product_data: {
-                name: 'ClawMore Managed Platform',
+                name: `ClawMore ${tierConfig.name}`,
                 description:
                   'Managed AWS infrastructure, AI-powered fixes, CI/CD integration, and dashboard.',
               },
-              unit_amount: 2900,
+              unit_amount: tierConfig.amount,
               recurring: { interval: 'month' },
             },
             quantity: 1,
@@ -82,6 +89,7 @@ export async function createPlatformSubscriptionSession(
     cancel_url: cancelUrl,
     metadata: {
       type: 'platform_subscription',
+      tier,
       coEvolutionOptIn: coEvolutionOptIn ? 'true' : 'false',
       userEmail,
       userName,
