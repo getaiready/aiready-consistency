@@ -41,7 +41,22 @@ export async function analyzeConsistency(
   const filePaths = await scanFiles(scanOptions);
 
   // Collect issues by category
-  let namingIssues: any[] = [];
+  let namingIssues: Array<{
+    fileName?: string;
+    file?: string;
+    filePath?: string;
+    line?: number;
+    column?: number;
+    identifier?: string;
+    type?: string;
+    severity: Severity;
+    message?: string;
+    suggestion?: string;
+    description?: string;
+    files?: string[];
+    examples?: string[];
+    location?: { file: string; line: number; column: number };
+  }> = [];
   if (checkNaming) {
     // 1. Generalized naming analysis for all supported files
     namingIssues = await analyzeNamingGeneralized(filePaths);
@@ -66,9 +81,9 @@ export async function analyzeConsistency(
     if (!shouldIncludeSeverity(issue.severity, minSeverity)) continue;
 
     const fileName =
-      (issue as any).fileName ||
-      (issue as any).file ||
-      (issue as any).filePath ||
+      issue.fileName ||
+      issue.file ||
+      issue.filePath ||
       'unknown';
     if (!fileIssuesMap.has(fileName)) fileIssuesMap.set(fileName, []);
     fileIssuesMap.get(fileName)!.push(issue as unknown as ConsistencyIssue);
@@ -79,11 +94,11 @@ export async function analyzeConsistency(
     if (!shouldIncludeSeverity(issue.severity, minSeverity)) continue;
 
     const fileName =
-      (issue as any).fileName ||
-      (issue as any).file ||
-      (issue as any).filePath ||
-      (Array.isArray((issue as any).files)
-        ? (issue as any).files[0]
+      issue.fileName ||
+      issue.file ||
+      issue.filePath ||
+      (Array.isArray(issue.files)
+        ? issue.files[0]
         : 'unknown');
     if (!fileIssuesMap.has(fileName)) fileIssuesMap.set(fileName, []);
     fileIssuesMap.get(fileName)!.push(issue as unknown as ConsistencyIssue);
