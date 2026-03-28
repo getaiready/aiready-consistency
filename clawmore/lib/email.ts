@@ -129,7 +129,6 @@ export async function sendPaymentFailedEmail(to: string, name: string) {
 
 export async function sendSubscriptionCancelledEmail(to: string, name: string) {
   const safeName = escapeHtml(name);
-  const dashboardUrl = `${appUrl}/dashboard`;
   const pricingUrl = `${appUrl}/#pricing`;
 
   const html = emailWrapper(`

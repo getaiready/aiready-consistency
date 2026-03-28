@@ -8,6 +8,9 @@ import {
   sendPaymentFailedEmail,
   sendSubscriptionCancelledEmail,
 } from '../../../../lib/email';
+import { createLogger } from '../../../../lib/logger';
+
+const log = createLogger('stripe-webhook');
 
 const dbClient = new DynamoDBClient({
   region: process.env.AWS_REGION || 'ap-southeast-2',
