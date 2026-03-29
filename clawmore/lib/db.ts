@@ -21,7 +21,9 @@ export interface ManagedAccountRecord {
   lastCostSync?: string;
   provisioningStatus?: 'provisioning' | 'complete' | 'failed';
   provisioningError?: string;
+  accountStatus?: 'ACTIVE' | 'SUSPENDED' | 'PENDING_DEPLOY';
   repoUrl?: string;
+  updatedAt?: string;
 }
 
 export interface UserMetadata {
@@ -253,6 +255,26 @@ export async function updateProvisioningStatus(
       Key: { PK: `ACCOUNT#${awsAccountId}`, SK: 'METADATA' },
       UpdateExpression: updateExpr,
       ExpressionAttributeValues: expressionValues,
+    })
+  );
+}
+
+/**
+ * Updates the operational status of a managed account (e.g., to ACTIVE after first deploy).
+ */
+export async function updateAccountStatus(
+  awsAccountId: string,
+  status: 'ACTIVE' | 'SUSPENDED' | 'PENDING_DEPLOY'
+) {
+  await docClient.send(
+    new UpdateCommand({
+      TableName: process.env.DYNAMO_TABLE,
+      Key: { PK: `ACCOUNT#${awsAccountId}`, SK: 'METADATA' },
+      UpdateExpression: 'SET accountStatus = :status, updatedAt = :now',
+      ExpressionAttributeValues: {
+        ':status': status,
+        ':now': new Date().toISOString(),
+      },
     })
   );
 }

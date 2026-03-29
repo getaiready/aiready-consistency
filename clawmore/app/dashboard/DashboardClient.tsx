@@ -240,8 +240,6 @@ export default function DashboardClient({
   }
 
   // --- Provisioning Banner ---
-  const showProvisioningBanner = provisionStatus === 'provisioning';
-  const showProvisioningFailed = provisionStatus === 'failed';
 
   return (
     <div className="max-w-6xl mx-auto py-10 md:py-16 px-6 sm:px-10 font-sans animate-in fade-in slide-in-from-bottom-4 duration-700">

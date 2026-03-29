@@ -194,7 +194,36 @@ export class ProvisioningOrchestrator {
         }
       }
 
-      // 6. DynamoDB Persistence (Crucial for Dashboard and Billing)
+      // 6. Trigger Initial Deployment (via AWS CodeBuild)
+      console.log(
+        `[Provision] Provisioning CodeBuild project in sub-account...`
+      );
+      try {
+        const { createCodeBuildProject, triggerCodeBuildBuild } =
+          await import('../aws/vending');
+        const projectName = await createCodeBuildProject(
+          accountId,
+          repoUrl,
+          options.githubToken
+        );
+
+        console.log(
+          `[Provision] Triggering initial deployment via CodeBuild...`
+        );
+        await triggerCodeBuildBuild(accountId, projectName);
+        console.log(`[Provision] CodeBuild deployment triggered successfully.`);
+      } catch (triggerErr: any) {
+        console.error(
+          `[Provision] Failed to trigger CodeBuild deployment:`,
+          triggerErr.message
+        );
+      }
+
+      // Mark account as pending deployment in DynamoDB
+      const { updateAccountStatus } = await import('../db');
+      await updateAccountStatus(accountId, 'PENDING_DEPLOY');
+
+      // 7. DynamoDB Persistence (Crucial for Dashboard and Billing)
       console.log(`[Provision] Recording managed account in DynamoDB...`);
       await createManagedAccountRecord({
         awsAccountId: accountId,
@@ -205,7 +234,7 @@ export class ProvisioningOrchestrator {
       // Ensure user has metadata (for credits and global settings)
       await ensureUserMetadata(userEmail);
 
-      // Mark provisioning as complete
+      // Mark provisioning as complete (this state now includes vended + triggered deploy)
       await updateProvisioningStatus(accountId, 'complete', undefined, repoUrl);
 
       console.log(

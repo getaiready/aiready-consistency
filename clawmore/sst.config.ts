@@ -155,6 +155,28 @@ export default $config({
     // EventBridge Bus for managed events (e.g. mutations)
     const bus = new sst.aws.Bus('ClawMoreBus');
 
+    // Grant PutEvents permission to the entire AWS Organization
+    new aws.eventbridge.BusPolicy('ClawMoreBusPolicy', {
+      busName: bus.name,
+      policy: JSON.stringify({
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Sid: 'AllowOrganizationPutEvents',
+            Effect: 'Allow',
+            Principal: '*',
+            Action: 'events:PutEvents',
+            Resource: `arn:aws:events:${$app.home.region}:${aws.getCallerIdentity().then((id) => id.accountId)}:event-bus/${bus.name}`,
+            Condition: {
+              StringEquals: {
+                'aws:PrincipalOrgID': 'o-yt8245n3z6',
+              },
+            },
+          },
+        ],
+      }),
+    });
+
     // Queue for fair-use AI task processing
     const aiQueue = new sst.aws.Queue('AIQueue', {
       visibilityTimeout: '5 minutes',
@@ -221,6 +243,20 @@ export default $config({
     bus.subscribe('MutationReporting', reportMutationTax.arn, {
       pattern: {
         detailType: ['MutationPerformed'],
+      },
+    });
+
+    const handleDeploymentComplete = new sst.aws.Function(
+      'HandleDeploymentComplete',
+      {
+        handler: 'functions/handle-deployment-complete.handler',
+        link: [table],
+      }
+    );
+
+    bus.subscribe('DeploymentTracking', handleDeploymentComplete.arn, {
+      pattern: {
+        detailType: ['DeploymentStatus'],
       },
     });
 

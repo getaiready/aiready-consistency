@@ -69,7 +69,7 @@ All client Spoke repositories are hosted as **Private Repos** within the `clawmo
 
 - [ ] **Multi-Tenant Dashboard**: Real-time visualization of "Evolution ROI" for clients.
 - [ ] **Skill Marketplace**: Allow clients to "install" new agent capabilities (e.g., "SEO Agent," "Security Hardening Agent").
-- [ ] **Automated Onboarding**: 1-click "Connect GitHub" -> "Deploy Managed AWS Node."
+- [x] **Automated Onboarding**: 1-click "Connect GitHub" -> "Deploy Managed AWS Node" (Via Warm Pool + GitHub Workflow Dispatch).
 
 ### **Phase 3: Dominance (Q3 2026)**
 

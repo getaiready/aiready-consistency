@@ -27,7 +27,7 @@ const STEPS = [
   {
     id: 'github-clone',
     label: 'Spoke Provisioning',
-    description: 'Cloning serverlessclaw template into private repo...',
+    description: 'Triggering autonomous deploy via AWS CodeBuild...',
   },
   {
     id: 'incident-bus',
