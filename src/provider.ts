@@ -4,9 +4,9 @@ import { calculateConsistencyScore } from './scoring';
 import { ConsistencyOptions, ConsistencyIssue } from './types';
 
 /**
- * Consistency Tool Provider
+ * Naming Consistency Tool Provider
  */
-export const ConsistencyProvider = createProvider({
+export const NAMING_CONSISTENCY_PROVIDER = createProvider({
   id: ToolName.NamingConsistency,
   alias: ['consistency', 'naming', 'standards'],
   version: '0.16.5',
