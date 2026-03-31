@@ -1,13 +1,13 @@
 import { ToolRegistry } from '@aiready/core';
-import { AiSignalClarityProvider } from './provider';
+import { AI_SIGNAL_CLARITY_PROVIDER } from './provider';
 
 // Register with global registry
-ToolRegistry.register(AiSignalClarityProvider);
+ToolRegistry.register(AI_SIGNAL_CLARITY_PROVIDER);
 
 export { analyzeAiSignalClarity } from './analyzer';
 export { calculateAiSignalClarityScore } from './scoring';
 export { scanFile } from './scanner';
-export { AiSignalClarityProvider };
+export { AI_SIGNAL_CLARITY_PROVIDER };
 export type {
   AiSignalClarityOptions,
   AiSignalClarityReport,

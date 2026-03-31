@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { TestabilityProvider } from '../provider';
+import { TESTABILITY_PROVIDER } from '../provider';
 import * as analyzer from '../analyzer';
 
 vi.mock('../analyzer', () => ({
@@ -15,7 +15,7 @@ describe('Testability Provider', () => {
       recommendations: [],
     });
 
-    const output = await TestabilityProvider.analyze({ rootDir: '.' });
+    const output = await TESTABILITY_PROVIDER.analyze({ rootDir: '.' });
 
     expect(output.summary.score).toBe(90);
     expect(output.metadata!.toolName).toBe('testability-index');
@@ -28,7 +28,7 @@ describe('Testability Provider', () => {
       results: [],
     };
 
-    const scoring = TestabilityProvider.score(mockOutput as any, {
+    const scoring = TESTABILITY_PROVIDER.score(mockOutput as any, {
       rootDir: '.',
     });
     expect(scoring.score).toBe(80);

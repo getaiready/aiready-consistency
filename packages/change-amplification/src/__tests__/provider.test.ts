@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { ChangeAmplificationProvider } from '../provider';
+import { CHANGE_AMPLIFICATION_PROVIDER } from '../provider';
 import * as analyzer from '../analyzer';
 
 vi.mock('../analyzer', () => ({
@@ -21,7 +21,9 @@ describe('Change Amplification Provider', () => {
       results: [],
     });
 
-    const output = await ChangeAmplificationProvider.analyze({ rootDir: '.' });
+    const output = await CHANGE_AMPLIFICATION_PROVIDER.analyze({
+      rootDir: '.',
+    });
 
     expect(output.summary.totalFiles).toBe(1);
     expect(output.metadata!.toolName).toBe('change-amplification');
@@ -33,7 +35,7 @@ describe('Change Amplification Provider', () => {
       results: [],
     };
 
-    const scoring = ChangeAmplificationProvider.score(mockOutput as any, {
+    const scoring = CHANGE_AMPLIFICATION_PROVIDER.score(mockOutput as any, {
       rootDir: '.',
     });
     expect(scoring.score).toBe(85);

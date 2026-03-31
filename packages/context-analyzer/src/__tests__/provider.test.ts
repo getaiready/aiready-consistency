@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { ContextAnalyzerProvider } from '../provider';
+import { CONTEXT_ANALYZER_PROVIDER } from '../provider';
 import * as analyzer from '../index';
 import * as summary from '../summary';
 
@@ -47,7 +47,7 @@ describe('Context Analyzer Provider', () => {
       totalFiles: 1,
     } as any);
 
-    const output = await ContextAnalyzerProvider.analyze({ rootDir: '.' });
+    const output = await CONTEXT_ANALYZER_PROVIDER.analyze({ rootDir: '.' });
 
     expect(output.summary.totalFiles).toBe(1);
     expect(output.results[0].fileName).toBe('file1.ts');
@@ -69,7 +69,7 @@ describe('Context Analyzer Provider', () => {
       results: [],
     };
 
-    const scoring = ContextAnalyzerProvider.score(mockOutput as any, {
+    const scoring = CONTEXT_ANALYZER_PROVIDER.score(mockOutput as any, {
       rootDir: '.',
     });
     expect(scoring.score).toBeDefined();

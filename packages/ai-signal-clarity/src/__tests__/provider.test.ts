@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { AiSignalClarityProvider } from '../provider';
+import { AI_SIGNAL_CLARITY_PROVIDER } from '../provider';
 import * as analyzer from '../analyzer';
 
 vi.mock('../analyzer', () => ({
@@ -15,7 +15,7 @@ describe('AI Signal Clarity Provider', () => {
       recommendations: [],
     });
 
-    const output = await AiSignalClarityProvider.analyze({ rootDir: '.' });
+    const output = await AI_SIGNAL_CLARITY_PROVIDER.analyze({ rootDir: '.' });
 
     expect(output.summary.filesAnalyzed).toBe(1);
     expect(output.metadata!.toolName).toBe('ai-signal-clarity');
@@ -28,7 +28,7 @@ describe('AI Signal Clarity Provider', () => {
       results: [],
     };
 
-    const scoring = AiSignalClarityProvider.score(mockOutput as any, {
+    const scoring = AI_SIGNAL_CLARITY_PROVIDER.score(mockOutput as any, {
       rootDir: '.',
     });
     expect(scoring.score).toBeDefined();

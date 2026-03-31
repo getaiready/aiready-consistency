@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { AgentGroundingProvider } from '../provider';
+import { AGENT_GROUNDING_PROVIDER } from '../provider';
 import * as analyzer from '../analyzer';
 
 vi.mock('../analyzer', () => ({
@@ -15,7 +15,7 @@ describe('Agent Grounding Provider', () => {
       recommendations: [],
     });
 
-    const output = await AgentGroundingProvider.analyze({ rootDir: '.' });
+    const output = await AGENT_GROUNDING_PROVIDER.analyze({ rootDir: '.' });
 
     expect(output.summary.score).toBe(90);
     expect(output.metadata!.toolName).toBe('agent-grounding');
@@ -28,7 +28,7 @@ describe('Agent Grounding Provider', () => {
       results: [],
     };
 
-    const scoring = AgentGroundingProvider.score(mockOutput as any, {
+    const scoring = AGENT_GROUNDING_PROVIDER.score(mockOutput as any, {
       rootDir: '.',
     });
     expect(scoring.score).toBe(80);

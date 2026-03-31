@@ -1,12 +1,12 @@
 import { ToolRegistry } from '@aiready/core';
-import { AgentGroundingProvider } from './provider';
+import { AGENT_GROUNDING_PROVIDER } from './provider';
 
 // Register with global registry
-ToolRegistry.register(AgentGroundingProvider);
+ToolRegistry.register(AGENT_GROUNDING_PROVIDER);
 
 export { analyzeAgentGrounding } from './analyzer';
 export { calculateGroundingScore } from './scoring';
-export { AgentGroundingProvider };
+export { AGENT_GROUNDING_PROVIDER };
 export type {
   AgentGroundingOptions,
   AgentGroundingReport,

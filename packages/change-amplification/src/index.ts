@@ -1,12 +1,12 @@
 import { ToolRegistry } from '@aiready/core';
-import { ChangeAmplificationProvider } from './provider';
+import { CHANGE_AMPLIFICATION_PROVIDER } from './provider';
 
 // Register with global registry
-ToolRegistry.register(ChangeAmplificationProvider);
+ToolRegistry.register(CHANGE_AMPLIFICATION_PROVIDER);
 
 export { analyzeChangeAmplification } from './analyzer';
 export { calculateChangeAmplificationScore } from './scoring';
-export { ChangeAmplificationProvider };
+export { CHANGE_AMPLIFICATION_PROVIDER };
 export type {
   ChangeAmplificationOptions,
   ChangeAmplificationReport,

@@ -1,8 +1,8 @@
 import { ToolRegistry } from '@aiready/core';
-import { ConsistencyProvider } from './provider';
+import { CONSISTENCY_PROVIDER } from './provider';
 
 // Register with global registry
-ToolRegistry.register(ConsistencyProvider);
+ToolRegistry.register(CONSISTENCY_PROVIDER);
 
 export { analyzeConsistency } from './analyzer';
 export function generateSummary(report: any) {
@@ -13,7 +13,7 @@ export { analyzeNaming } from './analyzers/naming'; // Legacy regex version
 export { detectNamingConventions } from './analyzers/naming-constants';
 export { analyzePatterns } from './analyzers/patterns';
 export { calculateConsistencyScore } from './scoring';
-export { ConsistencyProvider };
+export { CONSISTENCY_PROVIDER };
 export type {
   ConsistencyOptions,
   ConsistencyReport,

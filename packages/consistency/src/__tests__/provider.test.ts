@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { ConsistencyProvider } from '../provider';
+import { CONSISTENCY_PROVIDER } from '../provider';
 import * as analyzer from '../analyzer';
 
 vi.mock('../analyzer', () => ({
@@ -20,7 +20,7 @@ describe('Consistency Provider', () => {
       recommendations: [],
     });
 
-    const output = await ConsistencyProvider.analyze({ rootDir: '.' });
+    const output = await CONSISTENCY_PROVIDER.analyze({ rootDir: '.' });
 
     expect(output.summary.filesAnalyzed).toBe(1);
     expect(output.metadata!.toolName).toBe('naming-consistency');
@@ -32,7 +32,7 @@ describe('Consistency Provider', () => {
       results: [{ fileName: 'f1.ts', issues: [] }],
     };
 
-    const scoring = ConsistencyProvider.score(mockOutput as any, {
+    const scoring = CONSISTENCY_PROVIDER.score(mockOutput as any, {
       rootDir: '.',
     });
     expect(scoring.score).toBeDefined();

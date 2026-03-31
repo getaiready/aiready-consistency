@@ -1,8 +1,8 @@
 import { ToolRegistry } from '@aiready/core';
-import { ContextAnalyzerProvider } from './provider';
+import { CONTEXT_ANALYZER_PROVIDER } from './provider';
 
 // Register with global registry
-ToolRegistry.register(ContextAnalyzerProvider);
+ToolRegistry.register(CONTEXT_ANALYZER_PROVIDER);
 
 export * from './orchestrator';
 export * from './graph-builder';
@@ -29,4 +29,4 @@ export * from './report/console-report';
 export * from './report/html-report';
 export * from './report/interactive-setup';
 
-export { ContextAnalyzerProvider };
+export { CONTEXT_ANALYZER_PROVIDER };

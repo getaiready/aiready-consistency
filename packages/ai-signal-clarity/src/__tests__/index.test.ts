@@ -18,8 +18,8 @@ describe('AiSignalClarity Index Exports', () => {
     expect(typeof index.scanFile).toBe('function');
   });
 
-  it('should export AiSignalClarityProvider', () => {
-    expect(index.AiSignalClarityProvider).toBeDefined();
+  it('should export AI_SIGNAL_CLARITY_PROVIDER', () => {
+    expect(index.AI_SIGNAL_CLARITY_PROVIDER).toBeDefined();
   });
 
   it('should export all types', () => {
