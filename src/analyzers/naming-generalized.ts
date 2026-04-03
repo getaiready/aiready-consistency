@@ -49,6 +49,44 @@ const COMMON_ABBREVIATIONS = new Set([
   'js',
 ]);
 
+// Font families that use underscores (e.g., Geist_Mono, JetBrains_Mono)
+const FONT_FAMILIES = new Set([
+  'Geist_Mono',
+  'Geist_Sans',
+  'JetBrains_Mono',
+  'Fira_Code',
+  'Source_Code_Pro',
+  'IBM_Plex_Mono',
+  'Space_Mono',
+  'Roboto_Mono',
+  'Ubuntu_Mono',
+  'Inconsolata',
+  'Cousine',
+  'Anonymous_Pro',
+  'Arimo',
+  'Tinos',
+  'Cabin',
+  'Cardo',
+  'Gentium',
+  'Libre_Baskerville',
+  'Lora',
+  'Merriweather',
+  'Noto_Sans',
+  'Noto_Serif',
+  'Open_Sans',
+  'Playfair_Display',
+  'PT_Sans',
+  'PT_Serif',
+  'Raleway',
+  'Roboto',
+  'Slabo',
+  'Source_Sans_Pro',
+  'Source_Serif_Pro',
+  'Spectral',
+  'Titillium_Web',
+  'Ubuntu',
+]);
+
 /**
  * Analyzes naming conventions using generalized LanguageParser metadata
  */
@@ -147,6 +185,7 @@ export async function analyzeNamingGeneralized(
           if (!spec || spec === '*' || spec === 'default') continue;
           if (exceptions.has(spec)) continue;
           if (COMMON_ABBREVIATIONS.has(spec.toLowerCase())) continue;
+          if (FONT_FAMILIES.has(spec)) continue; // Skip font families (e.g., Geist_Mono)
           if (spec.includes('.')) continue; // Library imports like urllib.parse (Issue: Library Naming Inconsistency)
 
           if (
