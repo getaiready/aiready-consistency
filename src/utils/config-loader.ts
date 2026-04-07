@@ -26,8 +26,8 @@ export interface NamingConfig {
 export async function loadNamingConfig(files: string[]): Promise<NamingConfig> {
   // Load config from the first file's directory (or project root)
   const rootDir = files.length > 0 ? dirname(files[0]) : process.cwd();
-  const config = await loadConfig(rootDir);
-  const consistencyConfig = config?.tools?.['consistency'];
+  const result = await loadConfig(rootDir);
+  const consistencyConfig = result.config?.tools?.['consistency'];
 
   // Extract custom configuration
   const customAbbreviations = new Set(
