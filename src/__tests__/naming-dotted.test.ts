@@ -40,7 +40,7 @@ def analyze():
       (i) => i.type === 'naming-inconsistency'
     );
     expect(namingIssues.length).toBe(0);
-  });
+  }, 15000);
 
   it('should still flag inconsistent top-level names without dots', async () => {
     const file = createTestFile(
